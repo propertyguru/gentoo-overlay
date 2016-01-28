@@ -175,6 +175,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-2.15-python-mock.patch"
 	"${FILESDIR}/${PN}-socat-openssl-method-fix.patch"
 	"${FILESDIR}/${PN}-socat-openssl-verify-disable.patch"
+	"${FILESDIR}/x-daemon-util-logrotate-fix.patch"
 )
 
 REQUIRED_USE="kvm? ( || ( amd64 x86 ) )"
