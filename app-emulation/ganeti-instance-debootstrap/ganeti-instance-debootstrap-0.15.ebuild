@@ -21,7 +21,8 @@ RDEPEND="app-arch/dpkg
 	dev-util/debootstrap
 	>=sys-apps/coreutils-6.10-r1
 	sys-apps/util-linux
-	sys-fs/e2fsprogs"
+	sys-fs/e2fsprogs
+	sys-fs/multipath-tools"
 
 src_prepare() {
 	epatch "${FILESDIR}/instance-debootstrap-sfdisk.patch"
