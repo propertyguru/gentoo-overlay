@@ -25,7 +25,7 @@ RDEPEND="app-arch/dpkg
 	sys-fs/multipath-tools"
 
 src_prepare() {
-	epatch "${FILESDIR}/instance-debootstrap-sfdisk.patch"
+	epatch "${FILESDIR}/x-instance-debootstrap-sfdisk.patch"
 	epatch "${FILESDIR}/x-create-add-xfs.patch"
 }
 
