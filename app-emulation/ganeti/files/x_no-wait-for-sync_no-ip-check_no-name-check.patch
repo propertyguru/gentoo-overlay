@@ -1,0 +1,30 @@
+diff --git a/lib/cli_opts.py b/lib/cli_opts.py
+index 1728684..550ffc6 100644
+--- a/lib/cli_opts.py
++++ b/lib/cli_opts.py
+@@ -643,7 +643,7 @@ DEBUG_SIMERR_OPT = cli_option("--debug-simulate-errors", default=False,
+                               " treat most runtime checks as failed")
+ 
+ NWSYNC_OPT = cli_option("--no-wait-for-sync", dest="wait_for_sync",
+-                        default=True, action="store_false",
++                        default=False, action="store_false",
+                         help="Don't wait for sync (DANGEROUS!)")
+ 
+ WFSYNC_OPT = cli_option("--wait-for-sync", dest="wait_for_sync",
+@@ -830,13 +830,13 @@ HVLIST_OPT = cli_option("-H", "--hypervisor-parameters", dest="hvparams",
+                         " format hypervisor:option=value,option=value,...",
+                         default=[], action="append", type="identkeyval")
+ 
+-NOIPCHECK_OPT = cli_option("--no-ip-check", dest="ip_check", default=True,
++NOIPCHECK_OPT = cli_option("--no-ip-check", dest="ip_check", default=False,
+                            action="store_false",
+                            help="Don't check that the instance's IP"
+                            " is alive")
+ 
+ NONAMECHECK_OPT = cli_option("--no-name-check", dest="name_check",
+-                             default=True, action="store_false",
++                             default=False, action="store_false",
+                              help="Don't check that the instance's name"
+                              " is resolvable")
+ 
+
