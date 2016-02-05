@@ -26,6 +26,7 @@ RDEPEND="app-arch/dpkg
 
 src_prepare() {
 	epatch "${FILESDIR}/instance-debootstrap-sfdisk.patch"
+	epatch "${FILESDIR}/x-create-add-xfs.patch"
 }
 
 src_configure() {
