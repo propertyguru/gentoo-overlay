@@ -1,0 +1,8 @@
+--- thai_dictionary/Makefile.orig	2015-12-21 06:37:49.649296870 +0000
++++ thai_dictionary/Makefile	2015-12-21 06:40:54.447337527 +0000
+@@ -1,4 +1,4 @@
+-TSEARCH_DATA_DIR=`pg_config --sharedir`/tsearch_data
++TSEARCH_DATA_DIR?=`pg_config --sharedir`/tsearch_data
+ FILES=th_TH.dict th_TH.affix
+ 
+ all: copy
