@@ -177,6 +177,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-socat-openssl-verify-disable.patch"
 	"${FILESDIR}/x-daemon-util-logrotate-fix.patch"
 	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
+	"${FILESDIR}/x_lxc.mount.entry_shm.patch"
 )
 
 REQUIRED_USE="kvm? ( || ( amd64 x86 ) )"
