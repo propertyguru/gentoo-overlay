@@ -8,7 +8,7 @@ EBZR_REPO_URI="lp:run-one"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64"
 IUSE=""
 
 src_install() {
