@@ -178,6 +178,7 @@ PATCHES=(
 	"${FILESDIR}/x-daemon-util-logrotate-fix.patch"
 	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
 	"${FILESDIR}/x_lxc.mount.entry_shm.patch"
+	"${FILESDIR}/x_ganeti-issue-1129-cpu-capping.patch"
 )
 
 REQUIRED_USE="kvm? ( || ( amd64 x86 ) )"
