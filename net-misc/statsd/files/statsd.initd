@@ -37,7 +37,7 @@ stop() {
 	ebegin "Stopping $PROGNAME"
 	start-stop-daemon --stop --pidfile $PIDFILE
 	eend $? "Failed to stop $PROGNAME"
-	rm -f /var/run/nginx.pid
+	rm -f $PIDFILE
 }
 
 reload() {
