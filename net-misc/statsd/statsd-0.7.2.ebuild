@@ -11,8 +11,8 @@ EGIT_COMMIT="v${PV}"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="man minimal"
+KEYWORDS="amd64 x86"
+IUSE="-man -examples -repeater"
 
 DEPEND="man? ( app-text/ronn )"
 
@@ -37,13 +37,16 @@ src_install() {
     dodir /usr/lib/statsd/backends
     dodir /usr/lib/statsd/lib
     cp -R ${WORKDIR}/statsd-${PV}/lib/* ${D}/usr/lib/statsd/lib/
-    cp -R ${WORKDIR}/statsd-${PV}/backends/* ${D}/usr/lib/statsd/backends/
+    cp -R ${WORKDIR}/statsd-${PV}/backends/{graphite,console}.js ${D}/usr/lib/statsd/backends/
+	if use repeater ; then
+		cp -R ${WORKDIR}/statsd-${PV}/backends/repeater.js ${D}/usr/lib/statsd/backends/
+	fi
     cp ${WORKDIR}/statsd-${PV}/package.json ${D}/usr/lib/statsd/
     cp ${WORKDIR}/statsd-${PV}/stats.js ${D}/usr/lib/statsd/
     cp ${WORKDIR}/statsd-${PV}/proxy.js ${D}/usr/lib/statsd/
 
     dodir /etc
-    if ! use minimal ; then
+    if use examples ; then
         dodir /usr/share/statsd/examples
         cp -R ${WORKDIR}/statsd-${PV}/examples/* ${D}/usr/share/statsd/examples
     fi
@@ -67,6 +70,11 @@ pkg_postinst() {
 	enewuser statsd -1 -1 -1 statsd
 	dodir /var/log/statsd
 	dodir /var/run/statsd
+	if use repeater ; then
+		ewarn "You need to run 'npm install' "
+		ewarn "in ${D}usr/lib/statsd to ensure "
+		ewarn "the dependencies for repeater are installed."
+	fi
 	fowners statsd /var/run/statsd
 	fowners statsd /var/log/statsd
 	eend ${?}
