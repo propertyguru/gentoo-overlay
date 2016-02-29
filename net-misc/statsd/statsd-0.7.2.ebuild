@@ -72,7 +72,7 @@ pkg_postinst() {
 	dodir /var/run/statsd
 	if use repeater ; then
 		ewarn "You need to run 'npm install' "
-		ewarn "in ${D}usr/lib/statsd to ensure "
+		ewarn "in /usr/lib/statsd to ensure "
 		ewarn "the dependencies for repeater are installed."
 	fi
 	fowners statsd /var/run/statsd
