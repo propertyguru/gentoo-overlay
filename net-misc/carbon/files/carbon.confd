@@ -1,0 +1,8 @@
+# Use the given config file
+CARBON_CONFIG="/etc/carbon/carbon.conf"
+
+CARBON_USER=carbon
+CARBON_GROUP=carbon
+
+# Add extra parameters
+CARBON_EXTRA_PARAMETERS=""

@@ -1,0 +1,66 @@
+#!/sbin/runscript
+# Copyright 1999-2014 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+export GRAPHITE_CONF_DIR=/etc/carbon
+export GRAPHITE_STORAGE_DIR=/var/lib/carbon
+
+INSTANCE=${SVCNAME/#*.}
+if [ "${INSTANCE}" == "${SVCNAME}" ]; then
+	INSTANCE="a"
+fi
+
+PIDFILE="/var/run/carbon/${SVCNAME}.pid"
+PROGRAMNAME=${SVCNAME/.*}
+
+CARBON_CONFIG=${CARBON_CONFIG:-/etc/carbon/carbon.conf}
+CARBON_USER=${CARBON_USER:-carbon}
+CARBON_GROUP=${CARBON_GROUP:-carbon}
+
+depend() {
+	use net
+}
+
+
+start_pre() {
+	if [ ! -f ${CARBON_CONFIG} ] ; then
+		eend "Missing ${CARBON_CONFIG}"
+	fi
+	if [ ! -d /var/log/carbon ] ; then
+		mkdir -p /var/log/carbon
+	fi
+	chown -R ${CARBON_USER}:${CARBON_GROUP} /var/log/carbon
+	if [ ! -d /var/lib/carbon ] ; then
+		mkdir -p /var/lib/carbon/{rrd,whisper,lists}
+	fi
+	chown -R ${CARBON_USER}:${CARBON_GROUP} /var/lib/carbon
+	if [ ! -d /var/run/carbon ] ; then
+		mkdir -p /var/run/carbon
+	fi
+	chown -R ${CARBON_USER}:${CARBON_GROUP} /var/run/carbon
+	case "${PROGRAMNAME}" in
+		"carbon-relay" )
+			[ -f /etc/carbon/relay-rules.conf ] || eend "Missing relay-rules.conf"
+			;;
+		"carbon-aggregator" )
+			[ -f /etc/carbon/aggregation-rules.conf ] || eend "Missing missing aggregation-rules.conf"
+			;;
+	esac
+}
+
+start() {
+	ebegin "Starting ${PROGRAMNAME} instance ${INSTANCE}"
+	start-stop-daemon --start --exec /usr/bin/${PROGRAMNAME}.py \
+	    --pidfile ${PIDFILE} --group ${CARBON_GROUP} --user ${CARBON_USER}\
+	    -- --pidfile ${PIDFILE} --instance ${INSTANCE} \
+		--logdir /var/log/carbon/ --config ${CARBON_CONFIG} start >/dev/null
+	eend $? "Failed to start ${SVCNAME}"
+}
+
+stop() {
+	ebegin "Stopping ${PROGRAMNAME} instance ${INSTANCE}"
+	start-stop-daemon --stop --exec /usr/bin/${PROGRAMNAME}.py \
+		--pidfile ${PIDFILE} -- stop >/dev/null
+	eend $? "Failed to stop ${SVCNAME}"
+}
