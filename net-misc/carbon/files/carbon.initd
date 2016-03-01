@@ -11,7 +11,7 @@ if [ "${INSTANCE}" == "${SVCNAME}" ]; then
 	INSTANCE="a"
 fi
 
-PIDFILE="/var/run/${SVCNAME}.pid"
+PIDFILE="/var/run/carbon/${SVCNAME}.pid"
 PROGRAMNAME=${SVCNAME/.*}
 
 CARBON_CONFIG=${CARBON_CONFIG:-/etc/carbon/carbon.conf}
@@ -32,10 +32,13 @@ start_pre() {
 	fi
 	chown -R ${CARBON_USER}:${CARBON_GROUP} /var/log/carbon
 	if [ ! -d /var/lib/carbon ] ; then
-		mkdir -p /var/lib/carbon/rrd
-		mkdir -p /var/lib/carbon/whisper
-		mkdir -p /var/lib/carbon/list
+		mkdir -p /var/lib/carbon/{rrd,whisper,lists}
 	fi
+	chown -R ${CARBON_USER}:${CARBON_GROUP} /var/lib/carbon
+	if [ ! -d /var/run/carbon ] ; then
+		mkdir -p /var/run/carbon
+	fi
+	chown -R ${CARBON_USER}:${CARBON_GROUP} /var/run/carbon
 	case "${PROGRAMNAME}" in
 		"carbon-relay" )
 			[ -f /etc/carbon/relay-rules.conf ] || eend "Missing relay-rules.conf"
@@ -49,15 +52,15 @@ start_pre() {
 start() {
 	ebegin "Starting ${PROGRAMNAME} instance ${INSTANCE}"
 	start-stop-daemon --start --exec /usr/bin/${PROGRAMNAME}.py \
-	    --make-pidfile --pidfile ${PIDFILE} --group ${CARBON_GROUP} --user ${CARBON_USER}\
-	    -- --pidfile /dev/null --instance ${INSTANCE} \
+	    --pidfile ${PIDFILE} --group ${CARBON_GROUP} --user ${CARBON_USER}\
+	    -- --pidfile ${PIDFILE} --instance ${INSTANCE} \
 		--logdir /var/log/carbon/ --config ${CARBON_CONFIG} start >/dev/null
 	eend $? "Failed to start ${SVCNAME}"
 }
 
 stop() {
 	ebegin "Stopping ${PROGRAMNAME} instance ${INSTANCE}"
-	start-stop-daemon --stop \
-		--pidfile ${PIDFILE}
+	start-stop-daemon --stop --exec /usr/bin/${PROGRAMNAME}.py \
+		--pidfile ${PIDFILE} -- stop >/dev/null
 	eend $? "Failed to stop ${SVCNAME}"
 }
