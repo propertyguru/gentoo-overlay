@@ -1,0 +1,47 @@
+#!/sbin/runscript
+# Copyright 1999-2014 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+
+PIDFILE="/var/run/${SVCNAME}/${SVCNAME}.pid"
+PROGRAMNAME=${SVCNAME/.*}
+
+GUNICORN_CONFIG=/etc/${PROGRAMNAME}/gunicorn.conf
+LOG=/var/log/${PROGRAMNAME}/access.log
+ELOG=/var/log/${PROGRAMNAME}/error.log
+
+GRAPHITE_USER=${GRAPHITE_USER:-carbon}
+GRAPHITE_GROUP=${GRAPHITE_USER:-carbon}
+
+depend() {
+	use net
+}
+
+
+start_pre() {
+	if [ ! -f ${GUNICORN_CONFIG} ] ; then
+		eend "Missing ${GUNICORN_CONFIG}"
+	fi
+	if [ ! -d /var/log/graphite-web ] ; then
+		mkdir -p /var/log/graphite-web
+	fi
+	chown -R ${GRAPHITE_USER}:${GRAPHITE_GROUP} /var/log/graphite-web
+}
+
+start() {
+	ebegin "Starting ${PROGRAMNAME}"
+	exec 2>&1
+	start-stop-daemon --start --exec gunicorn \
+	    --pidfile ${PIDFILE} --group ${GRAPHITE_GROUP} --user ${GRAPHITE_USER} \
+	    -- graphite.wsgi -c ${GUNICORN_CONFIG} \
+	    --access-logfile ${LOG} --error-logfile ${ELOG} --pid ${PIDFILE} >/dev/null
+	eend $? "Failed to start ${SVCNAME}"
+}
+
+stop() {
+	ebegin "Stopping ${PROGRAMNAME}"
+	start-stop-daemon --stop \
+		--pidfile ${PIDFILE}
+	eend $? "Failed to stop ${SVCNAME}"
+}
