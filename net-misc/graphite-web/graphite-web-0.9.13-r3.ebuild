@@ -23,9 +23,7 @@ IUSE="ldap memcached +sqlite +gunicorn"
 
 DEPEND=""
 RDEPEND="dev-lang/python[sqlite?]
-	sqlite?	(
-		>=dev-python/django-1.6[sqlite,${PYTHON_USEDEP}]
-	)
+	>=dev-python/django-1.6[sqlite?,${PYTHON_USEDEP}]
 	>=dev-python/twisted-core-10.0[${PYTHON_USEDEP}]
 	>=dev-python/django-tagging-0.3.1[${PYTHON_USEDEP}]
 	dev-python/pycairo[${PYTHON_USEDEP}]
@@ -75,11 +73,13 @@ python_install() {
 
 	insinto /etc/${PN}
 	if use gunicorn ; then
-		newconfd "${FILESDIR}"/gunicorn.conf gunicorn.conf
+		newins "${FILESDIR}"/gunicorn.conf gunicorn.conf
 	fi
 	
 	newins webapp/graphite/local_settings.py.example local_settings.py
-	newinitd "${FILESDIR}"/graphite.initd graphite-web
+	if use gunicorn ; then
+		newinitd "${FILESDIR}"/graphite-web.gunicorn.init graphite-web
+	fi
 	pushd "${D}"/$(python_get_sitedir)/graphite > /dev/null || die
 	ln -s ../../../../../etc/${PN}/local_settings.py local_settings.py
 	popd > /dev/null || die
