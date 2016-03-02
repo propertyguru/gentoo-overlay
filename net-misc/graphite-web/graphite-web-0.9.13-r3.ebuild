@@ -52,6 +52,7 @@ PATCHES=(
 
 EXAMPLES=(
 	conf/dashboard.conf.example
+	${FILESDIR}/nginx.conf.example
 )
 
 src_prepare() {
