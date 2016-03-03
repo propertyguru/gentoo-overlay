@@ -15,7 +15,7 @@ DEPEND="dev-libs/icu
 
 pkg_nofetch() {
     einfo "Please download the source code from:"
-	einfo "${SRC_URI}"
+    einfo "${SRC_URI}"
     einfo "and place '${PN}-${PV}.tar.gz' in ${DISTDIR}"
 }
 
