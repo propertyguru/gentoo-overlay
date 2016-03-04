@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -161,7 +161,6 @@ PATCHES=(
 	"${FILESDIR}/${PN}-2.12-start-stop-daemon-args.patch"
 	"${FILESDIR}/${PN}-2.11-add-pgrep.patch"
 	"${FILESDIR}/${PN}-2.15-daemon-util.patch"
-	"${FILESDIR}/${PN}-2.7-fix-tests.patch"
 	"${FILESDIR}/${PN}-2.9-disable-root-tests.patch"
 	"${FILESDIR}/${PN}-2.9-skip-cli-test.patch"
 	"${FILESDIR}/${PN}-2.10-rundir.patch"
@@ -173,9 +172,10 @@ PATCHES=(
 	"${FILESDIR}/${PN}-2.11-daemon-util-tests.patch"
 	"${FILESDIR}/${PN}-2.13-process_unittest.patch"
 	"${FILESDIR}/${PN}-2.15-python-mock.patch"
-	"${FILESDIR}/${PN}-socat-openssl-method-fix.patch"
-	"${FILESDIR}/${PN}-socat-openssl-verify-disable.patch"
-	"${FILESDIR}/x-daemon-util-logrotate-fix.patch"
+	"${FILESDIR}/${PN}-2.15.2-remove-sandbox-failing-tests.patch"
+	"${FILESDIR}/x_${PN}-socat-openssl-method-fix.patch"
+	"${FILESDIR}/x_${PN}-socat-openssl-verify-disable.patch"
+	"${FILESDIR}/x_daemon-util-logrotate-fix.patch"
 	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
 	"${FILESDIR}/x_lxc.mount.entry_shm.patch"
 	"${FILESDIR}/x_ganeti-issue-1129-cpu-capping.patch"
