@@ -27,7 +27,8 @@ KEYWORDS="amd64 x86 arm"
 RDEPEND="
 	dev-python/twisted-core[${PYTHON_USEDEP}]
 	dev-python/whisper[${PYTHON_USEDEP}]
-	dev-python/txAMQP[${PYTHON_USEDEP}]"
+	dev-python/txAMQP[${PYTHON_USEDEP}]
+	!!dev-python/carbon"
 
 PATCHES=(
 	# Do not install the configuration and data files. We install them
