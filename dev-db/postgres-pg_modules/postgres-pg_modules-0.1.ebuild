@@ -13,6 +13,8 @@ RESTRICT="fetch"
 DEPEND="dev-libs/icu
 	dev-db/postgresql[server]"
 
+RDEPEND=${DEPEND}
+
 pkg_nofetch() {
     einfo "Please download the source code from:"
     einfo "${SRC_URI}"
