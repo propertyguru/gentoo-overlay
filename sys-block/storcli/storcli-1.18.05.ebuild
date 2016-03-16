@@ -5,9 +5,8 @@
 EAPI="5"
 
 DESCRIPTION="SAS MegaRAID StorCLI"
-HOMEPAGE="http://www.lsi.com/support/pages/download-results.aspx?keyword=storcli"
-#SRC_URI="http://www.lsi.com/downloads/Public/RAID%20Controllers/RAID%20Controllers%20Common%20Files/MR_SAS_StorCLI_${PV}.zip -> storcli-${PV}.zip"
-SRC_URI="https://mirror.deutschmann.io/distfiles/lsi/storcli/storcli-1.16.06.zip"
+HOMEPAGE="http://www.avagotech.com/support/download-search"
+SRC_URI="http://docs.avagotech.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/1.18.05_StorCLI.zip"
 
 LICENSE="LSI"
 SLOT="6.8"
@@ -25,7 +24,6 @@ S="${WORKDIR}"
 
 src_unpack() {
 	unpack ${A}
-	unpack ./storcli_all_os.zip
 	mv storcli_all_os/Ubuntu/storcli_*.deb "${WORKDIR}" || die "Failed to move storclli_*.deb"
 	rm -rf storcli_all*
 	unpack ./storcli_*.deb
