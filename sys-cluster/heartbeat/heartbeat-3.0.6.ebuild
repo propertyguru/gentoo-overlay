@@ -32,18 +32,14 @@ PDEPEND="sys-cluster/resource-agents"
 S=${WORKDIR}/Heartbeat-3-0-STABLE-${PV}
 
 PATCHES=(
-	"${FILESDIR}/3.0.4-fix_configure.patch"
-	"${FILESDIR}/3.0.4-docs.patch"
+	"${FILESDIR}/3.0.6-fix_configure.patch"
+	"${FILESDIR}/3.0.6-docs.patch"
 	"${FILESDIR}/3.0.4-python_tests.patch"
-	"${FILESDIR}/3.0.5-fix_ucast.patch"
 )
 
 pkg_setup() {
 	python_set_active_version 2
 	python_pkg_setup
-
-	ewarn "If you're upgrading from heartbeat-2.x please follow:"
-	ewarn "https://www.gentoo.org/proj/en/cluster/ha-cluster/heartbeat-upgrade.xml"
 }
 
 src_prepare() {
