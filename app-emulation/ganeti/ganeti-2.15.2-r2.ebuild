@@ -253,7 +253,7 @@ src_configure () {
 src_install () {
 	emake V=1 DESTDIR="${D}" install || die "emake install failed"
 
-	newinitd "${FILESDIR}"/ganeti.initd-r4 ${PN}
+	newinitd "${FILESDIR}"/ganeti.initd-r5 ${PN}
 	newconfd "${FILESDIR}"/ganeti.confd-r2 ${PN}
 
 	if use kvm; then
