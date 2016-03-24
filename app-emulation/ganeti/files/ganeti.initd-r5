@@ -9,12 +9,24 @@ depend() {
 	use net
 }
 
+extra_commands="rotate" # rotate is not `extra_started_commands` so that we can easily call /etc/init.g/ganeti rotate from logrotate and don't have to test if ganeti is running
+
 DAEMON_UTIL="/usr/lib/ganeti/daemon-util"
 
 is_master() {
 	[ -z "${ganeti_master}" ] && ganeti_master="$(gnt-cluster getmaster)"
 	[ -z "${local_hostname}" ] && local_hostname="$(hostname -f)"
 	[ "${ganeti_master}" = "${local_hostname}" ]
+}
+
+rotate() {
+	if status >/dev/null; then
+		ebegin "Running ${DAEMON_UTIL} rotate-all-logs"
+		${DAEMON_UTIL} rotate-all-logs
+		eend $?
+	else
+		status || true
+	fi
 }
 
 start() {
