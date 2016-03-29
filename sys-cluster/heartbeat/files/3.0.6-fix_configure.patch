@@ -11,8 +11,8 @@
 +dnl libdir=`var "$libdir" "$exec_prefix/lib"`
 +dnl libexecdir=`var "$libexecdir" "$exec_prefix/libexec"`
  noarchlibdir=`var "$noarchlibdir" "$prefix/lib"`
-
-
+ 
+ 
 @@ -284,53 +284,11 @@
    LIBC=`${LDD} ${tmpOutfile} | grep libc | sed -e 's%.*=> *%%' -e 's% .*$%%'`
    LibCdir=`dirname $LIBC`
@@ -35,13 +35,13 @@
  fi
 -#
 -#	The code above doesn't work right everywhere
--#		(like Fedora and OpenBSD)
+-#		(like Fedora and OpenBSD) 
 -#
 -case ${LibDirSuffix} in
 -	*lib*)	: Cool;;
 -	*)	: Sigh...
 -		case $OutFileType in
--		  *64-bit*)
+-		  *64-bit*)	
 -		  	case $host_os in
 -			  openbsd*)	LibDirSuffix=lib;;
 -		  	  *)		LibDirSuffix=lib64;;
@@ -60,23 +60,23 @@
 -
 -case $libdir in
 -  */*${LibDirSuffix})	: Cool ;;
--  *)			: Uh Oh...
+-  *)			: Uh Oh... 
 -	libdir=`dirname $libdir`/$LibDirSuffix
 -	AC_MSG_WARN([Overriding libdir to: $libdir]);;
 -esac
  for j in exec_prefix bindir sbindir datadir sysconfdir localstatedir \
  	includedir oldincludedir mandir docdir stdocdir libdir noarchlibdir
- do
+ do 
 @@ -379,7 +337,6 @@
  fi
-
+ 
  AC_CHECK_HEADERS(heartbeat/glue_config.h)
 -GLUE_HEADER=none
  if test "$ac_cv_header_heartbeat_glue_config_h" = "yes";  then
     GLUE_HEADER=heartbeat/glue_config.h
  else
 @@ -463,15 +420,6 @@
-
+ 
  dnl	We use this in the RPM specfile...
  AC_SUBST(ac_configure_args)
 -cleaned_configure_args=""
@@ -88,12 +88,12 @@
 -  esac
 -done
 -AC_SUBST(cleaned_configure_args)
-
+ 
  dnl *************************************************************************
  PATH="$PATH:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/bin"
 @@ -2087,7 +2035,7 @@
  fi
-
+ 
  if test "$GCC" = yes; then
 -  CFLAGS="$CFLAGS -ggdb3"
 +  CFLAGS="$CFLAGS"
