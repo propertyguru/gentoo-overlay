@@ -1,0 +1,13 @@
+Fix gpg-agent usage logic. In our case duply was always using the agent and asking for a password.
+
+--- duply_1.11.2/duply.orig
++++ duply_1.11.2/duply
+@@ -1882,7 +1882,7 @@
+ # if GPG_PW is not set alltogether
+ # if signing key is different from first (main) enc key (we can only pipe one pass into gpg)
+ if ! gpg_symmetric && \
+-   ( ! var_isset GPG_PW || \
++   ( ! var_isset GPG_PW && \
+      ( gpg_signing && ! var_isset GPG_PW_SIGN && [ "$GPG_KEY_SIGN" != "${GPG_KEYS_ENC_ARRAY[0]}" ] ) ); then
+ 
+   GPG_AGENT_ERR=$(gpg_agent_avail ; echo $?)
