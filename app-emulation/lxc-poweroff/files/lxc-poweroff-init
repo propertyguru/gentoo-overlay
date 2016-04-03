@@ -1,0 +1,17 @@
+#!/sbin/runscript
+
+depend() {
+	before ganeti # We should stop ganeti first and then stop the lxc instances. This is because ganeti-watcher starts `ERROR_down` instances so we don't want to stop instances while ganeti is running.
+}
+
+start() {
+	true # Nothing to do on startup
+}
+
+stop() {
+	l="$(lxc-ls -1 --active)" # This includes `--frozen` TODO: determine when can an instance be in a frozen state under ganeti and if we should stop frozen instances or do something else
+	[ -n "$l" ] || return
+	ebegin "Stopping LXC instances $(echo "$l" | xargs)"
+	moreutils_parallel lxc-stop -n -- $l
+	eend $?
+}
