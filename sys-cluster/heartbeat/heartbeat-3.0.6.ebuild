@@ -42,6 +42,11 @@ pkg_setup() {
 	python_pkg_setup
 }
 
+src_prepare() {
+	base_src_prepare
+	eautoreconf
+}
+
 src_configure() {
 	econf \
 		--disable-dependency-tracking \
