@@ -5,6 +5,7 @@
 
 HA_DIR=/etc/ha.d
 . $HA_DIR/shellfuncs
+HA_LIBEXECDIR=/usr/libexec/heartbeat # This is /usr/lib64/heartbeat in 3.0.5
 
 depend() {
 	use logger
@@ -34,15 +35,15 @@ start() {
 
 	# start the log subsystem
 	CheckBool "`ha_parameter use_logd`" && \
-	 ( /usr/lib/heartbeat/ha_logd -s &>/dev/null || \
-           /usr/lib/heartbeat/ha_logd -d -c /etc/ha.d/ha_logd.cf)
+	 ( "$HA_LIBEXECDIR"/ha_logd -s &>/dev/null || \
+           "$HA_LIBEXECDIR"/ha_logd -d -c /etc/ha.d/ha_logd.cf)
 
 	RunStartStop pre-start
 
 	CheckBool "`ha_parameter crm`" || \
-		/usr/lib/heartbeat/ResourceManager verifyallidle
+		/usr/share/heartbeat/ResourceManager verifyallidle
 
-	/usr/lib/heartbeat/heartbeat &>/dev/null
+	"$HA_LIBEXECDIR"/heartbeat &>/dev/null
 	ret=$?
 
 	RunStartStop post-start
@@ -55,26 +56,26 @@ stop() {
 
 	RunStartStop pre-stop
 
-	/usr/lib/heartbeat/heartbeat -k &>/dev/null
+	"$HA_LIBEXECDIR"/heartbeat -k &>/dev/null
 	ret=$?
 
 	RunStartStop post-stop ${ret}
 
 	# stop log subsystem
 	CheckBool "`ha_parameter use_logd`" && \
-	( /usr/lib/heartbeat/ha_logd -s &>/dev/null && \
-          /usr/lib/heartbeat/ha_logd -k &>/dev/null )
+	( "$HA_LIBEXECDIR"/ha_logd -s &>/dev/null && \
+          "$HA_LIBEXECDIR"/ha_logd -k &>/dev/null )
 
 	eend ${ret}
 }
 
 status() {
-	/usr/lib/heartbeat/heartbeat -s
+	"$HA_LIBEXECDIR"/heartbeat -s
 }
 
 reload() {
 	ebegin "Reloading heartbeat"
-	/usr/lib/heartbeat/heartbeat -r &>/dev/null
+	"$HA_LIBEXECDIR"/heartbeat -r
 	eend $?
 }
 
