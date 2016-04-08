@@ -134,8 +134,6 @@ DEPEND+="
 	sys-devel/m4
 	app-text/pandoc
 	<dev-python/sphinx-1.3[${PYTHON_USEDEP}]
-	media-fonts/urw-fonts
-	media-gfx/graphviz
 	>=dev-haskell/test-framework-0.6:0=
 	<dev-haskell/test-framework-0.9:0=
 	>=dev-haskell/test-framework-hunit-0.2.7:0=
