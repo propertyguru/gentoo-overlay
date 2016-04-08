@@ -47,7 +47,6 @@ DEPEND="
 	dev-python/pycurl[${PYTHON_USEDEP}]
 	dev-python/ipaddr[${PYTHON_USEDEP}]
 	dev-python/bitarray[${PYTHON_USEDEP}]
-	dev-python/docutils[${PYTHON_USEDEP}]
 	net-analyzer/arping
 	net-analyzer/fping
 	net-misc/bridge-utils
@@ -133,7 +132,6 @@ RDEPEND="${DEPEND}
 DEPEND+="
 	sys-devel/m4
 	app-text/pandoc
-	<dev-python/sphinx-1.3[${PYTHON_USEDEP}]
 	>=dev-haskell/test-framework-0.6:0=
 	<dev-haskell/test-framework-0.9:0=
 	>=dev-haskell/test-framework-hunit-0.2.7:0=
@@ -201,7 +199,7 @@ pkg_setup () {
 
 src_prepare() {
 	local testfile
-	eapply "${PATCHES[@]}"
+	epatch "${PATCHES[@]}"
 
 	# not sure why these tests are failing
 	# should remove this on next version bump if possible
