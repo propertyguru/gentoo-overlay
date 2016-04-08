@@ -2,11 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 PYTHON_COMPAT=(python2_7)
 PYTHON_REQ_USE="ipv6(+)?"
 
-inherit eutils user autotools bash-completion-r1 python-single-r1 versionator
+inherit user autotools bash-completion-r1 python-single-r1 versionator
 
 MY_PV="${PV/_rc/~rc}"
 MY_PV="${MY_PV/_beta/~beta}"
@@ -17,10 +17,6 @@ if [[ ${PV} =~ [9]{4,} ]] ; then
 	EGIT_REPO_URI="git://git.ganeti.org/ganeti.git"
 	inherit git-2
 	KEYWORDS=""
-	GIT_DEPEND="dev-python/docutils
-		dev-python/sphinx[${PYTHON_USEDEP}]
-		media-gfx/graphviz
-		media-fonts/urw-fonts"
 else
 	SRC_URI="http://downloads.ganeti.org/releases/${SERIES}/${MY_P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
@@ -32,15 +28,14 @@ HOMEPAGE="http://www.ganeti.org/"
 LICENSE="GPL-2"
 SLOT="0"
 IUSE="drbd haskell-daemons htools ipv6 kvm lxc monitoring multiple-users rbd syslog test xen"
-REQUIRED_USE="|| ( kvm xen lxc ) test? ( ipv6 ) ${PYTHON_REQUIRED_USE}"
+
+REQUIRED_USE="|| ( kvm xen lxc )
+	test? ( ipv6 )
+	kvm? ( || ( amd64 x86 ) )
+	${PYTHON_REQUIRED_USE}"
 
 USER_PREFIX="${GANETI_USER_PREFIX:-"gnt-"}"
 GROUP_PREFIX="${GANETI_GROUP_PREFIX:-"${USER_PREFIX}"}"
-
-DOC_DEPEND="dev-python/sphinx[${PYTHON_USEDEP}]
-	dev-python/docutils
-	media-fonts/urw-fonts
-	media-gfx/graphviz"
 
 DEPEND="
 	dev-libs/openssl:0
@@ -52,6 +47,7 @@ DEPEND="
 	dev-python/pycurl[${PYTHON_USEDEP}]
 	dev-python/ipaddr[${PYTHON_USEDEP}]
 	dev-python/bitarray[${PYTHON_USEDEP}]
+	dev-python/docutils[${PYTHON_USEDEP}]
 	net-analyzer/arping
 	net-analyzer/fping
 	net-misc/bridge-utils
@@ -61,7 +57,7 @@ DEPEND="
 	sys-apps/iproute2
 	sys-fs/lvm2
 	>=sys-apps/baselayout-2.0
-	dev-lang/ghc
+	dev-lang/ghc:0=
 	dev-haskell/cabal:0=
 	dev-haskell/cabal-install:0=
 	>=dev-haskell/mtl-2.1.1:0=
@@ -131,12 +127,15 @@ DEPEND="
 	)
 	rbd? ( sys-cluster/ceph )
 	ipv6? ( net-misc/ndisc6 )
-	${PYTHON_DEPS}
-	${GIT_DEPEND}"
+	${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
 	!app-emulation/ganeti-htools"
-DEPEND+="sys-devel/m4
+DEPEND+="
+	sys-devel/m4
 	app-text/pandoc
+	<dev-python/sphinx-1.3[${PYTHON_USEDEP}]
+	media-fonts/urw-fonts
+	media-gfx/graphviz
 	>=dev-haskell/test-framework-0.6:0=
 	<dev-haskell/test-framework-0.9:0=
 	>=dev-haskell/test-framework-hunit-0.2.7:0=
@@ -154,7 +153,6 @@ DEPEND+="sys-devel/m4
 		sys-apps/fakeroot
 		net-misc/socat
 		dev-util/shelltestrunner
-		${DOC_DEPEND}
 	)"
 
 PATCHES=(
@@ -173,6 +171,8 @@ PATCHES=(
 	"${FILESDIR}/${PN}-2.13-process_unittest.patch"
 	"${FILESDIR}/${PN}-2.15-python-mock.patch"
 	"${FILESDIR}/${PN}-2.15.2-remove-sandbox-failing-tests.patch"
+	"${FILESDIR}/${PN}-2.15-noded-must-run-as-root.patch"
+	"${FILESDIR}/${PN}-2.15-kvmd-run-as-daemon-user.patch"
 	"${FILESDIR}/x_${PN}-socat-openssl-method-fix.patch"
 	"${FILESDIR}/x_${PN}-socat-openssl-verify-disable.patch"
 	"${FILESDIR}/x_daemon-util-logrotate-fix.patch"
@@ -181,8 +181,6 @@ PATCHES=(
 	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
 	"${FILESDIR}/x_fix-cron-restart-spam.patch"
 )
-
-REQUIRED_USE="kvm? ( || ( amd64 x86 ) )"
 
 S="${WORKDIR}/${MY_P}"
 
@@ -205,8 +203,7 @@ pkg_setup () {
 
 src_prepare() {
 	local testfile
-	epatch_user
-	epatch "${PATCHES[@]}"
+	eapply "${PATCHES[@]}"
 
 	# not sure why these tests are failing
 	# should remove this on next version bump if possible
@@ -216,6 +213,8 @@ src_prepare() {
 
 	# take the sledgehammer approach to bug #526270
 	grep -lr '/bin/sh' "${S}" | xargs -r -- sed -i 's:/bin/sh:/bin/bash:g'
+
+	eapply_user
 
 	[[ ${PV} =~ [9]{4,} ]] && ./autogen.sh
 	rm autotools/missing
@@ -237,7 +236,6 @@ src_configure () {
 	econf --localstatedir=/var \
 		--sharedstatedir=/var \
 		--disable-symlinks \
-		--docdir=/usr/share/doc/${P} \
 		--with-ssh-initscript=/etc/init.d/sshd \
 		--with-export-dir=/var/lib/ganeti-storage/export \
 		--with-os-search-path=/usr/share/${PN}/os \
@@ -253,7 +251,7 @@ src_configure () {
 }
 
 src_install () {
-	emake V=1 DESTDIR="${D}" install || die "emake install failed"
+	emake V=1 DESTDIR="${D}" install
 
 	newinitd "${FILESDIR}"/ganeti.initd-r5 ${PN}
 	newconfd "${FILESDIR}"/ganeti.confd-r2 ${PN}
@@ -272,8 +270,12 @@ src_install () {
 		h{space,check,scan,info,ail,arep,roller,squeeze,bal} \
 		gnt-{os,job,filter,debug,storage,group,node,network,backup,cluster}
 
+	use monitoring && bashcomp_alias gnt-instance mon-collector
+
 	dodoc INSTALL UPGRADE NEWS README doc/*.rst
-	dohtml -r doc/html/* doc/css/*.css
+
+	docinto html
+	dodoc -r doc/html/* doc/css/*.css
 
 	docinto examples
 	dodoc doc/examples/{ganeti.cron,gnt-config-backup} doc/examples/*.ocf
