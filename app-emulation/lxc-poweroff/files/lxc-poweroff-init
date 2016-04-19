@@ -10,7 +10,7 @@ start() {
 
 stop() {
 	l="$(lxc-ls -1 --active)" # This includes `--frozen` TODO: determine when can an instance be in a frozen state under ganeti and if we should stop frozen instances or do something else
-	[ -n "$l" ] || return
+	[ -n "$l" ] || return 0
 	ebegin "Stopping LXC instances $(echo "$l" | xargs)"
 	moreutils_parallel lxc-stop -n -- $l
 	eend $?
