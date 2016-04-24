@@ -9,7 +9,7 @@ inherit python autotools multilib eutils base
 
 DESCRIPTION="Heartbeat high availability cluster manager"
 HOMEPAGE="http://www.linux-ha.org/wiki/Heartbeat"
-SRC_URI="http://hg.linux-ha.org/${PN}-STABLE_3_0/archive/STABLE-${PV}.tar.bz2"
+SRC_URI="http://hg.linux-ha.org/${PN}-STABLE_3_0/archive/STABLE-${PV}.tar.bz2 -> ${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -41,20 +41,11 @@ PATCHES=(
 pkg_setup() {
 	python_set_active_version 2
 	python_pkg_setup
-
-	ewarn "If you're upgrading from heartbeat-2.x please follow:"
-	ewarn "https://www.gentoo.org/proj/en/cluster/ha-cluster/heartbeat-upgrade.xml"
 }
 
 src_prepare() {
 	base_src_prepare
 	eautoreconf
-
-	cp "${FILESDIR}"/heartbeat-init "${T}" || die
-	sed -i \
-		-e "/ResourceManager/ s/lib/share/" \
-		-e "s:lib:$(get_libdir):g" \
-		"${T}"/heartbeat-init || die
 }
 
 src_configure() {
@@ -74,7 +65,7 @@ src_configure() {
 src_install() {
 	base_src_install
 
-	newinitd "${T}/heartbeat-init" heartbeat || die
+	newinitd "${FILESDIR}/heartbeat-init" heartbeat || die
 
 	# fix collisions
 	rm -rf "${D}"/usr/include/heartbeat/{compress,ha_msg}.h
