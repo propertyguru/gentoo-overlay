@@ -41,7 +41,7 @@ start() {
 	RunStartStop pre-start
 
 	CheckBool "`ha_parameter crm`" || \
-		/usr/lib/heartbeat/ResourceManager verifyallidle
+		/usr/share/heartbeat/ResourceManager verifyallidle
 
 	"$HA_LIBEXECDIR"/heartbeat
 	ret=$?
