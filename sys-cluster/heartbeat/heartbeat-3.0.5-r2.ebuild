@@ -9,7 +9,7 @@ inherit python autotools multilib eutils base
 
 DESCRIPTION="Heartbeat high availability cluster manager"
 HOMEPAGE="http://www.linux-ha.org/wiki/Heartbeat"
-SRC_URI="http://hg.linux-ha.org/${PN}-STABLE_3_0/archive/STABLE-${PV}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="http://hg.linux-ha.org/${PN}-STABLE_3_0/archive/STABLE-${PV}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
