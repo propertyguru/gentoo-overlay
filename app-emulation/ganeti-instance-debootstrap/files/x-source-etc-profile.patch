@@ -1,0 +1,10 @@
+--- create.orig
++++ create
+@@ -23,6 +23,7 @@
+ # potential rounding
+ declare -ri MIN_DEV_SIZE=$((255*1048576))
+ 
++source /etc/profile # /etc/env.d might have been updated since ganeti started, so ge the most recent variables
+ . common.sh
+ 
+ if [ "$GENERATE_CACHE" = "yes" -a ! -d "$CACHE_DIR" ]; then
