@@ -29,6 +29,7 @@ RDEPEND="app-arch/lzop
 	>=dev-python/boto-2.24.0
         >=dev-python/futures-3.0.5
         >=dev-python/python-dateutil-2.5.3
+        >=dev-python/azure-0.7.0
 	swift? (  >=dev-python/python-swiftclient-1.8.0 )
 	keystone? ( >=dev-python/python-keystoneclient-0.4.2 )
 	"
