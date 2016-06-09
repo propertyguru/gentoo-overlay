@@ -18,7 +18,7 @@ fi
 
 LICENSE="BSD-3"
 SLOT="0"
-IUSE="keystone swift test"
+IUSE="test"
 
 RESTRICT="test" # Tests cannot be ran currently because the azure>=0.7.0 package is not in gentoo
 
@@ -27,11 +27,11 @@ RDEPEND="app-arch/lzop
 	sys-apps/pv
 	>=dev-python/gevent-1.0.2
 	>=dev-python/boto-2.24.0
-        >=dev-python/futures-3.0.5
-        >=dev-python/python-dateutil-2.5.3
-        >=dev-python/azure-0.7.0
-	swift? (  >=dev-python/python-swiftclient-1.8.0 )
-	keystone? ( >=dev-python/python-keystoneclient-0.4.2 )
+  >=dev-python/futures-3.0.5
+  >=dev-python/python-dateutil-2.5.3
+  >=dev-python/azure-0.7.0
+	>=dev-python/python-swiftclient-1.8.0
+	>=dev-python/python-keystoneclient-0.4.2
 	"
 
 DEPEND="dev-python/setuptools[${PYTHON_USEDEP}]
