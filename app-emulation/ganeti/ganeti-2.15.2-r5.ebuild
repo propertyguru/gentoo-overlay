@@ -177,6 +177,7 @@ PATCHES=(
 	"${FILESDIR}/x_lxc.mount.entry_shm.patch"
 	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
 	"${FILESDIR}/x_fix-cron-restart-spam.patch"
+	"${FILESDIR}/x_increase-maxnics-to-16.patch"
 )
 
 S="${WORKDIR}/${MY_P}"
