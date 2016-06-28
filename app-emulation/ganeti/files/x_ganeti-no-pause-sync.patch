@@ -1,0 +1,12 @@
+diff --git a/lib/cmdlib/instance_create.py b/lib/cmdlib/instance_create.py
+index 4b2c6ee..ed1135c 100644
+--- a/lib/cmdlib/instance_create.py
++++ b/lib/cmdlib/instance_create.py
+@@ -1207,6 +1207,7 @@ class LUInstanceCreate(LogicalUnit):
+         if os_image is None and not self.op.no_install:
+           pause_sync = (not self.op.wait_for_sync and
+                         utils.AnyDiskOfType(disks, constants.DTS_INT_MIRROR))
++          pause_sync = False # don't pause the drbd sync while installing the OS https://propertyguru.atlassian.net/browse/SYSTEMS-1660
+           if pause_sync:
+             feedback_fn("* pausing disk sync to install instance OS")
+             result = self.rpc.call_blockdev_pause_resume_sync(self.pnode.uuid,

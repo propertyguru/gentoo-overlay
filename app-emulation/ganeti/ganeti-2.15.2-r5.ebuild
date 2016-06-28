@@ -178,6 +178,7 @@ PATCHES=(
 	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
 	"${FILESDIR}/x_fix-cron-restart-spam.patch"
 	"${FILESDIR}/x_increase-maxnics-to-16.patch"
+	"${FILESDIR}/x_ganeti-no-pause-sync.patch"
 )
 
 S="${WORKDIR}/${MY_P}"
