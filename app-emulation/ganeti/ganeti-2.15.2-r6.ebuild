@@ -187,6 +187,7 @@ PATCHES+=(
 	"${FILESDIR}/x_fix-cron-restart-spam.patch"
 	"${FILESDIR}/x_increase-maxnics-to-16.patch"
 	"${FILESDIR}/x_ganeti-no-pause-sync.patch"
+	"${FILESDIR}/x_lvm--readonly.patch"
 )
 
 S="${WORKDIR}/${MY_P}"

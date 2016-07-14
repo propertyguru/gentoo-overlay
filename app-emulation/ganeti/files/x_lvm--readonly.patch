@@ -1,0 +1,60 @@
+--- ./lib/backend.py.orig	2015-12-16 13:40:35.000000000 +0000
++++ ./lib/backend.py	2016-07-14 10:56:38.595471967 +0000
+@@ -2206,7 +2206,7 @@
+   sep = "|"
+   if not vg_names:
+     vg_names = []
+-  result = utils.RunCmd(["lvs", "--noheadings", "--units=m", "--nosuffix",
++  result = utils.RunCmd(["lvs", "--readonly", "--noheadings", "--units=m", "--nosuffix",
+                          "--separator=%s" % sep,
+                          "-ovg_name,lv_name,lv_size,lv_attr"] + vg_names)
+   if result.failed:
+@@ -2261,7 +2261,7 @@
+     multiple times.
+ 
+   """
+-  result = utils.RunCmd(["lvs", "--noheadings", "--units=m", "--nosuffix",
++  result = utils.RunCmd(["lvs", "--readonly", "--noheadings", "--units=m", "--nosuffix",
+                          "--separator=|",
+                          "--options=lv_name,lv_size,devices,vg_name"])
+   if result.failed:
+--- lib/storage/bdev.py.orig	2015-12-14 14:50:37.000000000 +0000
++++ lib/storage/bdev.py	2016-07-14 10:58:54.533663686 +0000
+@@ -233,7 +233,7 @@
+       raise errors.ProgrammerError("No fields specified")
+ 
+     sep = "|"
+-    cmd = [lvm_cmd, "--noheadings", "--nosuffix", "--units=m", "--unbuffered",
++    cmd = [lvm_cmd, "--readonly", "--noheadings", "--nosuffix", "--units=m", "--unbuffered",
+            "--separator=%s" % sep, "-o%s" % ",".join(fields)]
+ 
+     result = utils.RunCmd(cmd)
+@@ -489,7 +489,7 @@
+ 
+     """
+     sep = "|"
+-    result = _run_cmd(["lvs", "--noheadings", "--separator=%s" % sep,
++    result = _run_cmd(["lvs", "--readonly", "--noheadings", "--separator=%s" % sep,
+                        "--units=k", "--nosuffix",
+                        "-olv_attr,lv_kernel_major,lv_kernel_minor,"
+                        "vg_extent_size,stripes,devices", dev_path])
+@@ -645,7 +645,7 @@
+     """Try to remove old tags from the lv.
+ 
+     """
+-    result = utils.RunCmd(["lvs", "-o", "tags", "--noheadings", "--nosuffix",
++    result = utils.RunCmd(["lvs", "--readonly", "-o", "tags", "--noheadings", "--nosuffix",
+                            self.dev_path])
+     _CheckResult(result)
+ 
+--- lib/utils/__init__.py.orig	2015-12-15 14:55:37.000000000 +0000
++++ lib/utils/__init__.py	2016-07-14 10:59:49.152937162 +0000
+@@ -225,7 +225,7 @@
+        the size of the volume
+ 
+   """
+-  command = "vgs --noheadings --units m --nosuffix -o name,size"
++  command = "vgs --readonly --noheadings --units m --nosuffix -o name,size"
+   result = RunCmd(command)
+   retval = {}
+   if result.failed:
