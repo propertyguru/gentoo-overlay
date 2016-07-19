@@ -6,7 +6,13 @@ EAPI=6
 
 inherit systemd toolchain-funcs
 
-if [[ ${PV} != 9999 ]]; then
+if [[ ${PV} =~ _pre[0-9]+$ ]]; then
+	MY_PV=${PV/_pre/dr} # Change `3.18_pre3` to `3.18dr3`
+	MY_P=${PN}-${MY_PV} # Change `libreswan-3.18_pre3` to `libreswan-3.18dr3`
+	SRC_URI="https://download.libreswan.org/development/${MY_P}.tar.gz" # Needed to add path `/development`
+	KEYWORDS="amd64 ~ppc x86" # Unchanged
+	S="${WORKDIR}/${MY_P}" # Change `/tmp/portage/net-misc/libreswan-3.18_pre3/work/libreswan-3.18_pre3` to `/tmp/portage/net-misc/libreswan-3.18_pre3/work/libreswan-3.18dr3`
+elif [[ ${PV} != 9999 ]]; then
 	SRC_URI="https://download.libreswan.org/${P}.tar.gz"
 	KEYWORDS="amd64 ~ppc x86"
 else
@@ -83,7 +89,7 @@ src_install() {
 
 	systemd_dounit "${FILESDIR}/ipsec.service"
 
-	dodoc CHANGES README
+	dodoc CHANGES README.md
 	dodoc -r docs
 
 	find "${D}" -type d -empty -delete || die
