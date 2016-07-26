@@ -183,6 +183,7 @@ PATCHES+=(
 	"${FILESDIR}/x_daemon-util-logrotate-fix.patch"
 	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
 	"${FILESDIR}/x_lxc.mount.entry_shm.patch"
+	"${FILESDIR}/x_lxc.mount.auto_proc_sys_cgroup.patch" # This depends on x_lxc.mount.entry_shm.patch
 	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
 	"${FILESDIR}/x_fix-cron-restart-spam.patch"
 	"${FILESDIR}/x_increase-maxnics-to-16.patch"
