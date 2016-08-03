@@ -1,0 +1,14 @@
+The problem is that with the debug log level the following line is logged repeatedly and the file can grow to GB sizes:
+
+      lxc-start 1470218707.365 DEBUG    lxc_commands - commands.c:lxc_cmd_handler:893 - peer has disconnected
+
+--- ./lib/hypervisor/hv_lxc.py.orig	2016-08-03 10:07:43.623474668 +0000
++++ ./lib/hypervisor/hv_lxc.py	2016-08-03 10:10:34.862199995 +0000
+@@ -718,7 +718,6 @@
+       "lxc-start",
+       "-n", instance.name,
+       "-o", log_file,
+-      "-l", "DEBUG",
+       "-f", conf_file,
+       "-d"
+       ]

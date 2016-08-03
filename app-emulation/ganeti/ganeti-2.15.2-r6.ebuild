@@ -189,6 +189,8 @@ PATCHES+=(
 	"${FILESDIR}/x_increase-maxnics-to-16.patch"
 	"${FILESDIR}/x_ganeti-no-pause-sync.patch"
 	"${FILESDIR}/x_lvm--readonly.patch"
+	"${FILESDIR}/x_ganeti-lxc-start-blank-log-file.patch"
+	"${FILESDIR}/x_ganeti-lxc-start-do-not-use-debug-loglevel.patch"
 )
 
 S="${WORKDIR}/${MY_P}"

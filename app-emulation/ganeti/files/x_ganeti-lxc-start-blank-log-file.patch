@@ -1,0 +1,13 @@
+The problem is that the log files in /var/log/ganeti/lxc/ keep growing and there is no good way to reopen the log files. So start with an empty file on every instance start.
+--- ./lib/hypervisor/hv_lxc.py.orig	2016-08-03 10:02:39.315739908 +0000
++++ ./lib/hypervisor/hv_lxc.py	2016-08-03 10:06:15.654129501 +0000
+@@ -777,8 +777,7 @@
+       raise HypervisorError("Creating instance directory failed: %s", str(err))
+ 
+     log_file = self._InstanceLogFilePath(instance)
+-    if not os.path.exists(log_file):
+-      _CreateBlankFile(log_file, constants.SECURE_FILE_MODE)
++    _CreateBlankFile(log_file, constants.SECURE_FILE_MODE)
+ 
+     try:
+       sda_dev_path = block_devices[0][1]
