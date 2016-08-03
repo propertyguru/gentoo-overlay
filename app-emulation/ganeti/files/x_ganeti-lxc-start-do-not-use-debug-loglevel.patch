@@ -1,14 +1,16 @@
-The problem is that with the debug log level the following line is logged repeatedly and the file can grow to GB sizes:
+With the DEBUG log level the following line is logged repeatedly and the file can grow to GB sizes:
 
       lxc-start 1470218707.365 DEBUG    lxc_commands - commands.c:lxc_cmd_handler:893 - peer has disconnected
 
---- ./lib/hypervisor/hv_lxc.py.orig	2016-08-03 10:07:43.623474668 +0000
-+++ ./lib/hypervisor/hv_lxc.py	2016-08-03 10:10:34.862199995 +0000
-@@ -718,7 +718,6 @@
+The default is ERROR, which creates an empty file, which looks bad, so change DEBUG to INFO
+--- ./lib/hypervisor/hv_lxc.py.orig	2016-08-03 13:18:06.338837691 +0000
++++ ./lib/hypervisor/hv_lxc.py	2016-08-03 13:19:39.698200432 +0000
+@@ -718,7 +718,7 @@
        "lxc-start",
        "-n", instance.name,
        "-o", log_file,
 -      "-l", "DEBUG",
++      "-l", "INFO",
        "-f", conf_file,
        "-d"
        ]
