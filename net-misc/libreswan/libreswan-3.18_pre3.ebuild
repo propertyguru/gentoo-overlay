@@ -89,7 +89,7 @@ src_install() {
 
 	systemd_dounit "${FILESDIR}/ipsec.service"
 
-	dodoc CHANGES README.md
+	dodoc CHANGES README.*
 	dodoc -r docs
 
 	find "${D}" -type d -empty -delete || die
