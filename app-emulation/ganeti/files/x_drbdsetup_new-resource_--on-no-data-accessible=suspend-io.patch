@@ -1,0 +1,11 @@
+--- ./lib/storage/drbd_cmdgen.py.orig	2015-12-03 19:50:35.000000000 +0000
++++ ./lib/storage/drbd_cmdgen.py	2016-09-19 12:07:35.491726591 +0000
+@@ -320,7 +320,7 @@
+   def GenLocalInitCmds(self, minor, data_dev, meta_dev, size_mb, params):
+     cmds = []
+ 
+-    cmds.append(["drbdsetup", "new-resource", self._GetResource(minor)])
++    cmds.append(["drbdsetup", "new-resource", self._GetResource(minor), '--on-no-data-accessible=suspend-io'])
+     cmds.append(["drbdsetup", "new-minor", self._GetResource(minor),
+                  str(minor), "0"])
+     # We need to apply the activity log before attaching the disk else drbdsetup

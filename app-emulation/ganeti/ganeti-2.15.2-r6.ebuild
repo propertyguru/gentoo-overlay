@@ -191,6 +191,7 @@ PATCHES+=(
 	"${FILESDIR}/x_lvm--readonly.patch"
 	"${FILESDIR}/x_ganeti-lxc-start-blank-log-file.patch"
 	"${FILESDIR}/x_ganeti-lxc-start-do-not-use-debug-loglevel.patch"
+	"${FILESDIR}/x_drbdsetup_new-resource_--on-no-data-accessible=suspend-io.patch"
 )
 
 S="${WORKDIR}/${MY_P}"
