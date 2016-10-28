@@ -16,7 +16,7 @@ SRC_URI="amd64? ( https://artifacts.elastic.co/downloads/beats/${MY_PN}/${MY_P}-
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 
 QA_PREBUILT="usr/bin/filebeat"
 
