@@ -1,22 +1,17 @@
-EAPI="5"
+EAPI="6"
+
+inherit git-3
 
 DESCRIPTION="Postgres modules developed by PropertyGuru"
 
-HOMEPAGE="http://github.com/propertyguru/backend"
+HOMEPAGE="https://github.com/propertyguru/guruland/tree/master/backend/backend/native"
 LICENSE="commercial"
 SLOT="0"
 KEYWORDS="amd64 x86"
-SRC_URI="https://github.com/propertyguru/backend/archive/${P}.tar.gz"
-
-RESTRICT="fetch"
+SRC_URI=""
+EGIT_REPO_URI="git://github.com/propertyguru/guruland"
 
 DEPEND="dev-libs/icu
 	dev-db/postgresql[server]"
 
-pkg_nofetch() {
-    einfo "Please download the source code from:"
-    einfo "${SRC_URI}"
-    einfo "and place '${P}.tar.gz' in ${DISTDIR}"
-}
-
-S="${WORKDIR}/backend-${P}/native/postgres"
+S="${WORKDIR}/backend/backend/native/postgres"
