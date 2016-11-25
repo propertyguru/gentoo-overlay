@@ -1,6 +1,6 @@
 EAPI="6"
 
-inherit git-3
+inherit git-r3
 
 DESCRIPTION="Postgres modules developed by PropertyGuru"
 
@@ -8,10 +8,11 @@ HOMEPAGE="https://github.com/propertyguru/guruland/tree/master/backend/backend/n
 LICENSE="commercial"
 SLOT="0"
 KEYWORDS="amd64 x86"
-SRC_URI=""
-EGIT_REPO_URI="git://github.com/propertyguru/guruland"
+# You need to put deploy key/ssh private key
+# owned by portage:portage to /var/tmp/portage/.ssh directory
+EGIT_REPO_URI="ssh://git@github.com/propertyguru/guruland"
 
 DEPEND="dev-libs/icu
-	dev-db/postgresql[server]"
+        dev-db/postgresql[server]"
 
-S="${WORKDIR}/backend/backend/native/postgres"
+S="${WORKDIR}/${P}/backend/backend/native/postgres"
