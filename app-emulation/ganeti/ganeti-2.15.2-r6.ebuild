@@ -61,10 +61,10 @@ DEPEND="
 	dev-python/ipaddr[${PYTHON_USEDEP}]
 	dev-python/bitarray[${PYTHON_USEDEP}]
 	dev-python/fdsend[${PYTHON_USEDEP}]
-	net-analyzer/arping
 	net-analyzer/fping
 	net-misc/bridge-utils
 	net-misc/curl[ssl]
+	net-misc/iputils[arping]
 	net-misc/openssh
 	net-misc/socat
 	sys-apps/iproute2
