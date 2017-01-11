@@ -1,6 +1,6 @@
 --- create.orig	2015-10-23 13:25:16.000000000 +0000
 +++ create	2016-02-05 12:59:29.249348496 +0000
-@@ -60,7 +60,18 @@
+@@ -60,7 +60,19 @@
    exit 1
  fi
  
@@ -8,6 +8,7 @@
 +case "$OSP_FILESYSTEM" in
 +  ext[234])
 +    mke2fs -Fjqt $OSP_FILESYSTEM $filesystem_dev
++    tune2fs -e remount-ro "$filesystem_dev"
 +    ;;
 +  xfs)
 +    mkfs.xfs -f "$filesystem_dev"
