@@ -1,6 +1,5 @@
-This patch depends on x_lxc.mount.entry_shm.patch
---- lib/hypervisor/hv_lxc.py.orig	2016-07-26 05:00:11.062075297 +0000
-+++ lib/hypervisor/hv_lxc.py	2016-07-26 05:29:21.458513071 +0000
+--- lib/hypervisor/hv_lxc.py.orig	2015-12-14 14:50:37.000000000 +0000
++++ lib/hypervisor/hv_lxc.py	2017-01-26 05:48:52.951391370 +0000
 @@ -575,8 +575,7 @@
      out.append("lxc.rootfs = %s" % sda_dev_path)
  
@@ -8,6 +7,6 @@ This patch depends on x_lxc.mount.entry_shm.patch
 -    out.append("lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0")
 -    out.append("lxc.mount.entry = sysfs sys sysfs defaults 0 0")
 +    out.append("lxc.mount.auto = proc:mixed sys:mixed cgroup:mixed")
-     out.append("lxc.mount.entry = none dev/shm tmpfs rw,nosuid,nodev,create=dir") # See /usr/share/lxc/config/gentoo.common.conf
  
      # CPUs
+     if instance.hvparams[constants.HV_CPU_MASK]:
