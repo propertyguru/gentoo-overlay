@@ -1,7 +1,7 @@
 #!/sbin/openrc-run
 
 depend() {
-	before ganeti # We should stop ganeti first and then stop the lxc instances. This is because ganeti-watcher starts `ERROR_down` instances so we don't want to stop instances while ganeti is running.
+	before ganeti cron # We should stop ganeti and cron first and then stop the lxc instances. This is because ganeti-watcher starts `ERROR_down` instances so we don't want to stop instances while ganeti is running.
 }
 
 start() {
@@ -11,7 +11,8 @@ start() {
 stop() {
 	l="$(lxc-ls -1 --active)" # This includes `--frozen` TODO: determine when can an instance be in a frozen state under ganeti and if we should stop frozen instances or do something else
 	[ -n "$l" ] || return 0
-	ebegin "Stopping LXC instances $(echo "$l" | xargs)"
-	moreutils_parallel lxc-stop -n -- $l
+	ebegin "Stopping $(echo "$l" | wc -w) LXC instances $(echo "$l" | xargs)"
+	# We are using the default timeout of 60 seconds of lxc-stop below: https://github.com/lxc/lxc/blob/lxc-1.1.5/src/lxc/lxc_stop.c#L155-L162
+	echo "$l" | xargs -P 0 -n 1 lxc-stop -n
 	eend $?
 }

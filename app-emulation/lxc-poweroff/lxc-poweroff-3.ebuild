@@ -13,7 +13,6 @@ KEYWORDS="amd64 arm arm64" # Same architectures as app-emulation/lxc
 # The init script uses the command parallel from moreutils
 RDEPEND="
 	app-emulation/lxc
-	sys-apps/moreutils
 "
 
 src_unpack() {
