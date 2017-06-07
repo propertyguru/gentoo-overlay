@@ -1,0 +1,6 @@
+#!/sbin/openrc-run
+command=/opt/datadog-agent/agent/ddagent.py
+command_args="--use_simple_http_client=1"
+pidfile=/run/datadog-ddagent.pid
+start_stop_daemon_args="--chdir /opt/datadog-agent --background --make-pidfile --pidfile '$pidfile'"
+# The log is in /var/log/datadog/forwarder.log

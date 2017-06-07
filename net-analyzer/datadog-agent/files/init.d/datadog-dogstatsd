@@ -1,0 +1,9 @@
+#!/sbin/openrc-run
+command=/opt/datadog-agent/agent/dogstatsd.py
+command_args="--use-local-forwarder"
+pidfile=/tmp/dogstatsd.pid # TODO
+start_stop_daemon_args="--chdir /opt/datadog-agent --background"
+
+depend() {
+	use datadog-ddagent
+}
