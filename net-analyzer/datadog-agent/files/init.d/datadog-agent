@@ -4,7 +4,14 @@ command_args="foreground --use-local-forwarder"
 pidfile=/tmp/dd-agent.pid # TODO
 start_stop_daemon_args="--chdir /opt/datadog-agent --background"
 # Logs to /var/log/datadog/collector.log
+extra_commands="info"
 
 depend() {
 	use datadog-ddagent
 }
+
+info() {
+	cd "/opt/datadog-agent"
+	agent/agent.py info
+}
+
