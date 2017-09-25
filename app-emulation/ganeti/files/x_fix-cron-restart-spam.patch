@@ -1,8 +1,8 @@
 If the node where ganeti is installed on was not added to a cluster yet then we receive the following email on every restart:
 ```Cluster configuration incomplete: 'Can't read ssconf file /var/lib/ganeti/ssconf_master_node: [Errno 2] No such file or directory: '/var/lib/ganeti/ssconf_master_node''```
 
---- doc/examples/ganeti.cron.in.orig
-+++ doc/examples/ganeti.cron.in
+--- ./doc/examples/ganeti.cron.in.orig
++++ ./doc/examples/ganeti.cron.in
 @@ -1,7 +1,7 @@
  PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
  

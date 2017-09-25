@@ -18,8 +18,8 @@
                           "--separator=|",
                           "--options=lv_name,lv_size,devices,vg_name"])
    if result.failed:
---- lib/storage/bdev.py.orig	2015-12-14 14:50:37.000000000 +0000
-+++ lib/storage/bdev.py	2016-07-14 10:58:54.533663686 +0000
+--- ./lib/storage/bdev.py.orig	2015-12-14 14:50:37.000000000 +0000
++++ ./lib/storage/bdev.py	2016-07-14 10:58:54.533663686 +0000
 @@ -233,7 +233,7 @@
        raise errors.ProgrammerError("No fields specified")
  
@@ -47,8 +47,8 @@
                             self.dev_path])
      _CheckResult(result)
  
---- lib/utils/__init__.py.orig	2015-12-15 14:55:37.000000000 +0000
-+++ lib/utils/__init__.py	2016-07-14 10:59:49.152937162 +0000
+--- ./lib/utils/__init__.py.orig	2015-12-15 14:55:37.000000000 +0000
++++ ./lib/utils/__init__.py	2016-07-14 10:59:49.152937162 +0000
 @@ -225,7 +225,7 @@
         the size of the volume
  

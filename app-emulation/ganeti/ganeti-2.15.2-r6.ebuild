@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 PYTHON_COMPAT=(python2_7)
@@ -40,7 +39,7 @@ HOMEPAGE="http://www.ganeti.org/"
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="drbd haskell-daemons htools ipv6 kvm lxc monitoring multiple-users rbd syslog test xen restricted-commands"
+IUSE="drbd experimental haskell-daemons htools ipv6 kvm lxc monitoring multiple-users rbd syslog test xen restricted-commands"
 
 REQUIRED_USE="|| ( kvm xen lxc )
 	test? ( ipv6 )
@@ -220,6 +219,14 @@ src_prepare() {
 			"${WORKDIR}"/debian/patches/ghc-7.10-compatibility.patch
 		)
 	fi
+	if use experimental; then
+		ewarn "Experimental patches have been applied! RPC between daemons with different patches applied may cause breakage!"
+		PATCHES+=(
+			# QEMU Agent accepted upstream for 2.16, not yet in a tagged release
+			# backport available for 2.15, but refused upstream due to RPC breakage.
+			"${FILESDIR}"/0001-kvm-use_guest_agent-QEMU-Guest-Agent-sup.stable-2.15.patch
+		)
+	fi
 	epatch "${PATCHES[@]}"
 	# Upstream commits:
 	# 4c3c2ca2a97a69c0287a3d23e064bc17978105eb
@@ -284,7 +291,7 @@ src_configure () {
 src_install () {
 	emake V=1 DESTDIR="${D}" install
 
-	newinitd "${FILESDIR}"/ganeti.initd-r5 ${PN}
+	newinitd "${FILESDIR}"/ganeti.initd-r3 ${PN}
 	newconfd "${FILESDIR}"/ganeti.confd-r2 ${PN}
 
 	if use kvm; then

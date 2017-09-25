@@ -1,5 +1,5 @@
---- lib/hypervisor/hv_lxc.py.orig	2015-12-14 14:50:37.000000000 +0000
-+++ lib/hypervisor/hv_lxc.py	2017-01-26 05:48:52.951391370 +0000
+--- ./lib/hypervisor/hv_lxc.py.orig	2015-12-14 14:50:37.000000000 +0000
++++ ./lib/hypervisor/hv_lxc.py	2017-01-26 05:48:52.951391370 +0000
 @@ -575,8 +575,7 @@
      out.append("lxc.rootfs = %s" % sda_dev_path)
  

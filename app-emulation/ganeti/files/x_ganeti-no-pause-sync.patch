@@ -1,7 +1,5 @@
-diff --git a/lib/cmdlib/instance_create.py b/lib/cmdlib/instance_create.py
-index 4b2c6ee..ed1135c 100644
---- a/lib/cmdlib/instance_create.py
-+++ b/lib/cmdlib/instance_create.py
+--- ./lib/cmdlib/instance_create.py.orig
++++ ./lib/cmdlib/instance_create.py
 @@ -1207,6 +1207,7 @@ class LUInstanceCreate(LogicalUnit):
          if os_image is None and not self.op.no_install:
            pause_sync = (not self.op.wait_for_sync and

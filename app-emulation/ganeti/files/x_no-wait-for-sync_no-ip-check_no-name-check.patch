@@ -1,7 +1,5 @@
-diff --git a/lib/cli_opts.py b/lib/cli_opts.py
-index 1728684..550ffc6 100644
---- a/lib/cli_opts.py
-+++ b/lib/cli_opts.py
+--- ./lib/cli_opts.py
++++ ./lib/cli_opts.py
 @@ -643,7 +643,7 @@ DEBUG_SIMERR_OPT = cli_option("--debug-simulate-errors", default=False,
                                " treat most runtime checks as failed")
  

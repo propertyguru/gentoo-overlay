@@ -1,5 +1,5 @@
---- daemons/daemon-util.in.orig	2016-01-28 10:14:27.946690394 +0000
-+++ daemons/daemon-util.in	2016-01-28 10:21:48.666694390 +0000
+--- ./daemons/daemon-util.in.orig	2016-01-28 10:14:27.946690394 +0000
++++ ./daemons/daemon-util.in	2016-01-28 10:21:48.666694390 +0000
 @@ -205,7 +205,9 @@
  # Prints a list of all daemons in the order in which they should be stopped
  list_stop_daemons() {
