@@ -69,7 +69,7 @@ DEPEND="
 	sys-apps/iproute2
 	sys-fs/lvm2
 	>=sys-apps/baselayout-2.0
-	dev-lang/ghc:0=
+	<dev-lang/ghc-8:0=
 	dev-haskell/cabal:0=
 	dev-haskell/cabal-install:0=
 	>=dev-haskell/mtl-2.1.1:0=
