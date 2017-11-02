@@ -1,18 +1,16 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI="5"
+EAPI="6"
 
-MY_P="${P/_/-}"
-PYTHON_COMPAT=( python{3_3,3_4,3_5} )
+PYTHON_COMPAT=( python{3_4,3_5} )
 DISTUTILS_OPTIONAL=1
 
-inherit autotools bash-completion-r1 distutils-r1 eutils linux-info versionator flag-o-matic systemd
+inherit autotools bash-completion-r1 distutils-r1 linux-info versionator flag-o-matic systemd
 
 DESCRIPTION="LinuX Containers userspace utilities"
 HOMEPAGE="https://linuxcontainers.org/"
-SRC_URI="https://github.com/lxc/lxc/archive/${MY_P}.tar.gz"
+SRC_URI="https://linuxcontainers.org/downloads/lxc/${P}.tar.gz"
 
 KEYWORDS="~amd64 ~arm ~arm64"
 
@@ -50,7 +48,6 @@ CONFIG_CHECK="~CGROUPS ~CGROUP_DEVICE
 	~INET_UDP_DIAG ~INET_TCP_DIAG
 	~UNIX_DIAG ~CHECKPOINT_RESTORE
 
-	~DEVPTS_MULTIPLE_INSTANCES
 	~CGROUP_FREEZER
 	~UTS_NS ~NET_NS
 	~VETH ~MACVLAN
@@ -98,13 +95,16 @@ ERROR_GRKERNSEC_SYSFS_RESTRICT="CONFIG_GRKERNSEC_SYSFS_RESTRICT:  this GRSEC fea
 
 DOCS=(AUTHORS CONTRIBUTING MAINTAINERS NEWS README doc/FAQ.txt)
 
-S="${WORKDIR}/${PN}-${MY_P}"
-
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
-src_prepare() {
+pkg_setup() {
+	kernel_is -lt 4 7 && CONFIG_CHECK="${CONFIG_CHECK} ~DEVPTS_MULTIPLE_INSTANCES"
+	linux-info_pkg_setup
+}
 
-	epatch "${FILESDIR}"/${PN}-1.1.3-bash-completion.patch
+src_prepare() {
+	eapply "${FILESDIR}"/${PN}-1.1.3-bash-completion.patch
+	eapply_user
 	eautoreconf
 }
 
