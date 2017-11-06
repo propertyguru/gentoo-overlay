@@ -1,0 +1,11 @@
+--- ./src/Ganeti/HTools/Types.hs.orig	2015-12-14 14:50:37.000000000 +0000
++++ ./src/Ganeti/HTools/Types.hs	2016-06-11 10:03:16.662231678 +0000
+@@ -218,7 +218,7 @@
+ maxDisks = 16
+ 
+ maxNics :: Int
+-maxNics = 8
++maxNics = 16
+ 
+ -- | The default max ispec.
+ defMaxISpec :: ISpec

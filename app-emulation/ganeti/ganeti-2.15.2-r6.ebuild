@@ -184,6 +184,7 @@ PATCHES+=(
 	"${FILESDIR}/x_lxc.mount.auto_proc_sys_cgroup.patch"
 	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
 	"${FILESDIR}/x_fix-cron-restart-spam.patch"
+	"${FILESDIR}/x_increase-maxnics-to-16.patch"
 	"${FILESDIR}/x_ganeti-no-pause-sync.patch"
 	"${FILESDIR}/x_lvm--readonly.patch"
 	"${FILESDIR}/x_ganeti-lxc-start-blank-log-file.patch"
