@@ -20,7 +20,6 @@ IUSE="cgmanager doc examples lua python seccomp"
 
 # lxc-1.1.5 does not work with glibc-2.25 which is stable in gentoo now. We need to force a lower version. I did not check if it works with 2.24, but that's not stable, it works with 2.23 which is stable
 RDEPEND="net-libs/gnutls
-	<sys-libs/glibc-2.25
 	sys-libs/libcap
 	cgmanager? ( app-admin/cgmanager )
 	lua? ( >=dev-lang/lua-5.1:= )
