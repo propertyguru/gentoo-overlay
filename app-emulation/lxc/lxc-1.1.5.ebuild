@@ -18,7 +18,6 @@ LICENSE="LGPL-3"
 SLOT="0"
 IUSE="cgmanager doc examples lua python seccomp"
 
-# lxc-1.1.5 does not work with glibc-2.25 which is stable in gentoo now. We need to force a lower version. I did not check if it works with 2.24, but that's not stable, it works with 2.23 which is stable
 RDEPEND="net-libs/gnutls
 	sys-libs/libcap
 	cgmanager? ( app-admin/cgmanager )
@@ -104,6 +103,10 @@ pkg_setup() {
 src_prepare() {
 	eapply "${FILESDIR}"/${PN}-1.1.3-bash-completion.patch
 	eapply_user
+	sed -i \
+		-e '/^AM_INIT_AUTOMAKE/s:-Werror ::' \
+		-e '/CFLAGS=/s: -Werror::' \
+		configure.ac || die
 	eautoreconf
 }
 
