@@ -20,17 +20,17 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="btrfs disk mysql network pgbouncer ssh_check"
 
-GIT_HASH_AGENT="21f8b43" # This is inside the .tar.gz file
+GIT_HASH_AGENT="e7d0acd" # This is inside the .tar.gz file
 S="${WORKDIR}/DataDog-dd-agent-${GIT_HASH_AGENT}"
 
-GIT_HASH_INTEGRATIONS="1707579" # This is inside the .tar.gz file
+GIT_HASH_INTEGRATIONS="1a01c4a" # This is inside the .tar.gz file
 S_INTEGRATIONS="${WORKDIR}/DataDog-integrations-core-${GIT_HASH_INTEGRATIONS}"
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}" # https://wiki.gentoo.org/wiki/Project:Python/python-single-r1#REQUIRED_USE
 
 # https://github.com/DataDog/dd-agent/blob/master/requirements.txt
 # The use optional dependencies are from `grep '^[^#]'. */requirements.txt` in the integrations directory
-# Datadog 5.18.1 only works with dev-python/docker-py-1.10.6. The next higher version in gentoo is 2.2.1, but datadog fails to start at `from docker import Client` with `ImportError: cannot import name Client`
+# Datadog 5.20.2 only works with dev-python/docker-py-1.10.6. The next higher version in gentoo is 2.4.2, but datadog fails to start at `from docker import Client` with `ImportError: cannot import name Client`
 RDEPEND="
 	app-admin/sysstat
 	dev-python/boto[${PYTHON_USEDEP}]
