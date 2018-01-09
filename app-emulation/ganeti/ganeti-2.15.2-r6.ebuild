@@ -283,7 +283,7 @@ src_configure () {
 		$(use_enable monitoring) \
 		$(usex kvm '--with-kvm-path=' '' "/usr/bin/qemu-system-${kvm_arch}" '') \
 		$(usex haskell-daemons "--enable-confd=haskell" '' '' '') \
-		--with-haskell-flags="-optl -Wl,-z,relro -optl -Wl,--as-needed" \
+		--with-haskell-flags="-optc -no-pie -optl -no-pie -optl -Wl,-z,relro -optl -Wl,--as-needed" \
 		--enable-socat-escape \
 		--enable-socat-compress
 }
