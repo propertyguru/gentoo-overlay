@@ -1,5 +1,0 @@
-# The user to run as
-STATSD_USER=statsd
-
-# The configuration file
-STATSD_CONFIG=/etc/statsd-config.js
