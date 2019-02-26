@@ -1,0 +1,52 @@
+We used ganeti with lxc-1.1 in the past, but now lxc-3.1 works fine, so we want to use that.
+
+In lxc-2.1 there were incompatible changes to the lxc config file, which we need to change in ganeti too, see https://linuxcontainers.org/lxc/news/#lxc-21-release-announcement
+There is one tricky part here, the `lxc.rootfs.path`. By default lxc splits the string on the first `:` character and uses the part before `:` as the type of the device, see https://github.com/lxc/lxc/blob/lxc-3.1.0/src/lxc/confile.c#L2171-L2189 . Unfortunately this doesn't work for us because ganeti creates symlinks like `/run/ganeti/instance-disks/paul-playground:0` to point to the real devices. Work this around by always adding the type. There is no list of acceptable keywords in the lxc source, just checks in places if the type matches a particular string, so we can use anything here. I chose `auto` because that is already documented by lxc, and seems to work almost like the default. Another option would be to use an empty string, as it seems to be mapped to NULL, which seems to be the same as the default.
+--- ./lib/hypervisor/hv_lxc.py.orig
++++ ./lib/hypervisor/hv_lxc.py
+@@ -548,14 +548,14 @@
+     """
+     out = []
+     # hostname
+-    out.append("lxc.utsname = %s" % instance.name)
++    out.append("lxc.uts.name = %s" % instance.name)
+ 
+     # separate pseudo-TTY instances
+-    out.append("lxc.pts = 255")
++    out.append("lxc.pty.max = 255")
+     # standard TTYs
+     num_ttys = instance.hvparams[constants.HV_LXC_NUM_TTYS]
+     if num_ttys: # if it is the number greater than 0
+-      out.append("lxc.tty = %s" % num_ttys)
++      out.append("lxc.tty.max = %s" % num_ttys)
+ 
+     # console log file
+     # After the following patch was applied, we lost the console log file output
+@@ -572,7 +572,7 @@
+                    " disabling.", lxc_version)
+ 
+     # root FS
+-    out.append("lxc.rootfs = %s" % sda_dev_path)
++    out.append("lxc.rootfs.path = auto:%s" % sda_dev_path)
+ 
+     # Necessary file systems
+     out.append("lxc.mount.auto = proc:mixed sys:mixed cgroup:mixed")
+@@ -611,14 +611,14 @@
+       mode = nic.nicparams[constants.NIC_MODE]
+       link = nic.nicparams[constants.NIC_LINK]
+       if mode == constants.NIC_MODE_BRIDGED:
+-        out.append("lxc.network.type = veth")
+-        out.append("lxc.network.link = %s" % link)
++        out.append("lxc.net.%d.type = veth" % idx)
++        out.append("lxc.net.%d.link = %s" % (idx, link))
+       else:
+         raise errors.HypervisorError("LXC hypervisor only supports"
+                                      " bridged mode (NIC %d has mode %s)" %
+                                      (idx, mode))
+-      out.append("lxc.network.hwaddr = %s" % nic.mac)
+-      out.append("lxc.network.flags = up")
++      out.append("lxc.net.%d.hwaddr = %s" % (idx, nic.mac))
++      out.append("lxc.net.%d.flags = up" % idx)
+ 
+     # Capabilities
+     for cap in self._GetInstanceDropCapabilities(instance.hvparams):
