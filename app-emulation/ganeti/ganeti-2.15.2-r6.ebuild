@@ -190,6 +190,7 @@ PATCHES+=(
 	"${FILESDIR}/x_ganeti-lxc-start-blank-log-file.patch"
 	"${FILESDIR}/x_ganeti-lxc-start-do-not-use-debug-loglevel.patch"
 	"${FILESDIR}/x_drbdsetup_new-resource_--on-no-data-accessible=suspend-io.patch"
+	"${FILESDIR}/x_add-disk-size-to-list-default-fields.patch"
 )
 
 S="${WORKDIR}/${MY_P}"
@@ -227,7 +228,7 @@ src_prepare() {
 			"${FILESDIR}"/0001-kvm-use_guest_agent-QEMU-Guest-Agent-sup.stable-2.15.patch
 		)
 	fi
-	epatch "${PATCHES[@]}"
+	eapply "${PATCHES[@]}"
 	# Upstream commits:
 	# 4c3c2ca2a97a69c0287a3d23e064bc17978105eb
 	# 24618882737fd7c189adf99f4acc767d48f572c3
