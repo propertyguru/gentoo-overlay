@@ -2,6 +2,8 @@ We used ganeti with lxc-1.1 in the past, but now lxc-3.1 works fine, so we want 
 
 In lxc-2.1 there were incompatible changes to the lxc config file, which we need to change in ganeti too, see https://linuxcontainers.org/lxc/news/#lxc-21-release-announcement
 There is one tricky part here, the `lxc.rootfs.path`. By default lxc splits the string on the first `:` character and uses the part before `:` as the type of the device, see https://github.com/lxc/lxc/blob/lxc-3.1.0/src/lxc/confile.c#L2171-L2189 . Unfortunately this doesn't work for us because ganeti creates symlinks like `/run/ganeti/instance-disks/paul-playground:0` to point to the real devices. Work this around by always adding the type. There is no list of acceptable keywords in the lxc source, just checks in places if the type matches a particular string, so we can use anything here. I chose `auto` because that is already documented by lxc, and seems to work almost like the default. Another option would be to use an empty string, as it seems to be mapped to NULL, which seems to be the same as the default.
+See also https://linuxcontainers.org/lxc/manpages/man1/lxc-create.1.html#OPTIONS
+
 --- ./lib/hypervisor/hv_lxc.py.orig
 +++ ./lib/hypervisor/hv_lxc.py
 @@ -548,14 +548,14 @@
