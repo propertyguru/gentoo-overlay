@@ -13,7 +13,7 @@ KEYWORDS="amd64 ~arm ~arm64 ppc64 x86"
 
 LICENSE="LGPL-3"
 SLOT="0"
-IUSE="apparmor examples pam python seccomp selinux +templates"
+IUSE="apparmor doc examples pam python seccomp selinux +templates"
 
 RDEPEND="
 	net-libs/gnutls
@@ -23,7 +23,7 @@ RDEPEND="
 	selinux? ( sys-libs/libselinux )"
 
 DEPEND="${RDEPEND}
-	>=app-text/docbook-sgml-utils-0.6.14-r2
+	doc? ( >=app-text/docbook-sgml-utils-0.6.14-r2 )
 	>=sys-kernel/linux-headers-3.2"
 
 RDEPEND="${RDEPEND}
@@ -100,8 +100,6 @@ src_prepare() {
 src_configure() {
 	append-flags -fno-strict-aliasing
 
-	# --enable-doc is for manpages which is why we don't link it to a "doc"
-	# USE flag. We always want man pages.
 	local myeconfargs=(
 		--localstatedir=/var
 		--bindir=/usr/bin
@@ -112,7 +110,7 @@ src_configure() {
 		--with-runtime-path=/run
 		--disable-apparmor
 		--disable-werror
-		--enable-doc
+		$(use_enable doc) # --enable-doc is for manpages
 		$(use_enable apparmor)
 		$(use_enable examples)
 		$(use_enable pam)
