@@ -5,8 +5,8 @@ Aborting.
 
 This patch takes advantage of the rotate function of the ganeti initscript which first checks if the ganeti daemon was started. If not, then it will not call `daemon-util rotate-all-logs`
 
---- doc/examples/ganeti.logrotate.in.orig	2015-11-13 09:05:36.000000000 +0000
-+++ doc/examples/ganeti.logrotate.in	2017-12-04 06:54:17.403532367 +0000
+--- ./doc/examples/ganeti.logrotate.in.orig
++++ ./doc/examples/ganeti.logrotate.in
 @@ -7,6 +7,6 @@
          delaycompress
          sharedscripts
