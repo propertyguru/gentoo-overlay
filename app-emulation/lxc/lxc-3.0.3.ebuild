@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -9,11 +9,11 @@ DESCRIPTION="LinuX Containers userspace utilities"
 HOMEPAGE="https://linuxcontainers.org/"
 SRC_URI="https://linuxcontainers.org/downloads/lxc/${P}.tar.gz"
 
-KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86"
+KEYWORDS="amd64 ~arm ~arm64 ppc64 x86"
 
 LICENSE="LGPL-3"
 SLOT="0"
-IUSE="apparmor doc examples pam seccomp selinux +templates"
+IUSE="apparmor examples pam python seccomp selinux +templates"
 
 RDEPEND="
 	net-libs/gnutls
@@ -23,7 +23,7 @@ RDEPEND="
 	selinux? ( sys-libs/libselinux )"
 
 DEPEND="${RDEPEND}
-	doc? ( >=app-text/docbook-sgml-utils-0.6.14-r2 )
+	>=app-text/docbook-sgml-utils-0.6.14-r2
 	>=sys-kernel/linux-headers-3.2"
 
 RDEPEND="${RDEPEND}
@@ -31,7 +31,8 @@ RDEPEND="${RDEPEND}
 	app-misc/pax-utils
 	virtual/awk"
 
-PDEPEND="templates? ( app-emulation/lxc-templates )"
+PDEPEND="templates? ( app-emulation/lxc-templates )
+	python? ( dev-python/python3-lxc )"
 
 CONFIG_CHECK="~CGROUPS ~CGROUP_DEVICE
 	~CPUSETS ~CGROUP_CPUACCT
@@ -82,6 +83,7 @@ ERROR_GRKERNSEC_SYSFS_RESTRICT="CONFIG_GRKERNSEC_SYSFS_RESTRICT:  this GRSEC fea
 DOCS=(AUTHORS CONTRIBUTING MAINTAINERS NEWS README doc/FAQ.txt)
 
 pkg_setup() {
+	kernel_is -lt 4 7 && CONFIG_CHECK="${CONFIG_CHECK} ~DEVPTS_MULTIPLE_INSTANCES"
 	linux-info_pkg_setup
 }
 
@@ -98,6 +100,8 @@ src_prepare() {
 src_configure() {
 	append-flags -fno-strict-aliasing
 
+	# --enable-doc is for manpages which is why we don't link it to a "doc"
+	# USE flag. We always want man pages.
 	local myeconfargs=(
 		--localstatedir=/var
 		--bindir=/usr/bin
@@ -108,8 +112,8 @@ src_configure() {
 		--with-runtime-path=/run
 		--disable-apparmor
 		--disable-werror
+		--enable-doc
 		$(use_enable apparmor)
-		$(use_enable doc) # --enable-doc is for manpages
 		$(use_enable examples)
 		$(use_enable pam)
 		$(use_with pam pamdir $(getpam_mod_dir))
