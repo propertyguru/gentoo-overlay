@@ -29,7 +29,7 @@ See also https://linuxcontainers.org/lxc/manpages/man1/lxc-create.1.html#OPTIONS
  
      # root FS
 -    out.append("lxc.rootfs = %s" % sda_dev_path)
-+    out.append("lxc.rootfs.path = auto:%s" % sda_dev_path)
++    out.append("lxc.rootfs.path = lvm:%s" % sda_dev_path)
  
      # Necessary file systems
      out.append("lxc.mount.auto = proc:mixed sys:mixed cgroup:mixed")
