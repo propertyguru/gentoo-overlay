@@ -1,3 +1,9 @@
+There is one more place in ./lib/storage/bdev.py:
+cmd = [lvm_cmd, "--noheadings", "--nosuffix", "--units=m", "--unbuffered",
+But we don't change that because `pvs --readonly` is buggy and fails with:
+Operation prohibited while global/metadata_read_only is set.
+Recovery of standalone physical volumes failed.
+Cannot process standalone physical volumes
 --- ./lib/backend.py.orig	2015-12-16 13:40:35.000000000 +0000
 +++ ./lib/backend.py	2016-07-14 10:56:38.595471967 +0000
 @@ -2206,7 +2206,7 @@
@@ -20,15 +26,6 @@
    if result.failed:
 --- ./lib/storage/bdev.py.orig	2015-12-14 14:50:37.000000000 +0000
 +++ ./lib/storage/bdev.py	2016-07-14 10:58:54.533663686 +0000
-@@ -233,7 +233,7 @@
-       raise errors.ProgrammerError("No fields specified")
- 
-     sep = "|"
--    cmd = [lvm_cmd, "--noheadings", "--nosuffix", "--units=m", "--unbuffered",
-+    cmd = [lvm_cmd, "--readonly", "--noheadings", "--nosuffix", "--units=m", "--unbuffered",
-            "--separator=%s" % sep, "-o%s" % ",".join(fields)]
- 
-     result = utils.RunCmd(cmd)
 @@ -489,7 +489,7 @@
  
      """
