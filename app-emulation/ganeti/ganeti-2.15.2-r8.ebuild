@@ -1,45 +1,74 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 PYTHON_COMPAT=(python2_7)
 PYTHON_REQ_USE="ipv6(+)?"
 
-inherit user autotools bash-completion-r1 python-single-r1 versionator
+inherit user autotools bash-completion-r1 python-single-r1
 
 MY_PV="${PV/_rc/~rc}"
 MY_PV="${MY_PV/_beta/~beta}"
 MY_P="${PN}-${MY_PV}"
-SERIES="$(get_version_component_range 1-2)"
+SERIES="$(ver_cut 1-2)"
 
-if [[ ${PV} =~ [9]{4,} ]] ; then
-	EGIT_REPO_URI="git://git.ganeti.org/ganeti.git"
-	inherit git-2
-	KEYWORDS=""
-	PATCHES=()
-else
-	DEBIAN_PATCH=4
-	SRC_URI="
-	  http://downloads.ganeti.org/releases/${SERIES}/${MY_P}.tar.gz
-	  mirror://ubuntu/pool/universe/${PN:0:1}/${PN}/${PN}_${PV}-${DEBIAN_PATCH}.debian.tar.xz
-	"
-	KEYWORDS="amd64 x86"
-	PATCHES=(
-	  "${WORKDIR}"/debian/patches/do-not-backup-export-dir.patch
-	  "${WORKDIR}"/debian/patches/Makefile.am-use-C.UTF-8
-	  "${WORKDIR}"/debian/patches/relax-deps
-	  "${WORKDIR}"/debian/patches/zlib-0.6-compatibility
-	  "${WORKDIR}"/debian/patches/fix_FTBFS_with_sphinx-1.3.5
-	  "${WORKDIR}"/debian/patches/fix_ftbfs_with_sphinx_1.4
-	)
-fi
+DEBIAN_PATCH=11
+SRC_URI="
+	http://downloads.ganeti.org/releases/${SERIES}/${MY_P}.tar.gz
+	mirror://debian/pool/main/g/ganeti-${SERIES}/ganeti-${SERIES}_${PV}-${DEBIAN_PATCH}.debian.tar.xz
+"
+KEYWORDS="amd64 ~x86"
+PATCHES=(
+	"${FILESDIR}"/ganeti-2.15-use-balloon-device.patch
+	"${WORKDIR}"/debian/patches/do-not-backup-export-dir.patch
+	"${WORKDIR}"/debian/patches/Makefile.am-use-C.UTF-8
+	"${WORKDIR}"/debian/patches/relax-deps
+	"${WORKDIR}"/debian/patches/zlib-0.6-compatibility
+	"${WORKDIR}"/debian/patches/fix_FTBFS_with_sphinx-1.3.5
+	"${WORKDIR}"/debian/patches/fix_ftbfs_with_sphinx_1.4
+	"${WORKDIR}"/debian/patches/use-proper-cabal-dev.patch
+	"${WORKDIR}"/debian/patches/0001-Drop-dependency-on-MonadCatchIO-transformers.patch
+	"${WORKDIR}"/debian/patches/0001-GHC-8-support.patch
+	"${WORKDIR}"/debian/patches/ghc8-fixes
+	"${WORKDIR}"/debian/patches/snap-server-1.0-compat
+	"${WORKDIR}"/debian/patches/non-DSA-SSH-key-support.patch
+	"${WORKDIR}"/debian/patches/fix-ssh-key-renewal-on-single-node-clusters.patch
+	"${WORKDIR}"/debian/patches/set-defaults-for-ssh-type-bits.patch
+	"${WORKDIR}"/debian/patches/use-hv-class-to-check-for-migration.patch
+	"${WORKDIR}"/debian/patches/do-not-specify-socat-ssl-method.patch
+	"${WORKDIR}"/debian/patches/fix-ftbfs-with-sphinx-1.5.patch
+	"${WORKDIR}"/debian/patches/fix-failover-from-dead-node.patch
+	"${WORKDIR}"/debian/patches/fix-cpu-affinity.patch
+	"${WORKDIR}"/debian/patches/fix-fcntl-i386.patch
+	"${WORKDIR}"/debian/patches/fix-ovf-test-path.patch
+	"${WORKDIR}"/debian/patches/fix-qa-ssconf-race.patch
+	"${WORKDIR}"/debian/patches/relax-sphinx-version-check.patch
+	#"${WORKDIR}"/debian/patches/THH-2.12.patch
+	"${WORKDIR}"/debian/patches/sphinx-1.7.patch
+	"${WORKDIR}"/debian/patches/ca-use-sha256-md.patch
+	"${WORKDIR}"/debian/patches/impexpd-fix-certificate-verification-with-new-socat.patch
+	"${WORKDIR}"/debian/patches/impexpd-fix-certificate-verification-with-new-socat-2.patch
+	"${FILESDIR}/x_daemon-util-logrotate-fix.patch"
+	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
+	"${FILESDIR}/x_lxc.mount.auto_proc_sys_cgroup.patch"
+	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
+	"${FILESDIR}/x_fix-cron-restart-spam.patch"
+	"${FILESDIR}/x_increase-maxnics-to-16.patch"
+	"${FILESDIR}/x_ganeti-no-pause-sync.patch"
+	"${FILESDIR}/x_lvm--readonly.patch"
+	"${FILESDIR}/x_ganeti-lxc-start-blank-log-file.patch"
+	"${FILESDIR}/x_ganeti-lxc-start-do-not-use-debug-loglevel.patch"
+	"${FILESDIR}/x_drbdsetup_new-resource_--on-no-data-accessible=suspend-io.patch"
+	"${FILESDIR}/x_add-disk-size-to-list-default-fields.patch"
+	"${FILESDIR}/x_lxc-2.1-configuration-keys.patch"
+)
 
 DESCRIPTION="Ganeti is a virtual server management software tool"
 HOMEPAGE="http://www.ganeti.org/"
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="drbd experimental haskell-daemons htools ipv6 kvm lxc monitoring multiple-users rbd syslog test xen restricted-commands"
+IUSE="drbd experimental haskell-daemons htools ipv6 kvm lxc monitoring multiple-users rbd syslog test xen restricted-commands -extradeps"
 
 REQUIRED_USE="|| ( kvm xen lxc )
 	test? ( ipv6 )
@@ -59,19 +88,22 @@ DEPEND="
 	dev-python/pycurl[${PYTHON_USEDEP}]
 	dev-python/ipaddr[${PYTHON_USEDEP}]
 	dev-python/bitarray[${PYTHON_USEDEP}]
+	dev-python/docutils[${PYTHON_USEDEP}]
 	dev-python/fdsend[${PYTHON_USEDEP}]
+	net-misc/iputils[arping]
 	net-analyzer/fping
 	net-misc/bridge-utils
 	net-misc/curl[ssl]
-	net-misc/iputils[arping]
 	net-misc/openssh
 	net-misc/socat
 	sys-apps/iproute2
-	sys-fs/lvm2
+	>=sys-fs/lvm2-2.02.181
 	>=sys-apps/baselayout-2.0
-	<dev-lang/ghc-8:0=
+	>=dev-lang/ghc-8.0:0=
+	<dev-lang/ghc-8.1:0=
 	dev-haskell/cabal:0=
 	dev-haskell/cabal-install:0=
+	!<app-emulation/ganeti-instance-image-0.6-r1
 	>=dev-haskell/mtl-2.1.1:0=
 	>=dev-haskell/old-time-1.1.0.0:0=
 	>=dev-haskell/random-1.0.1.1:0=
@@ -94,8 +126,8 @@ DEPEND="
 	>=dev-haskell/lens-3.10:0=
 	>=dev-haskell/lifted-base-0.2.0.3:0=
 	<dev-haskell/lifted-base-0.3:0=
-	>=dev-haskell/monad-control-0.3.1.3:0=
-	<dev-haskell/monad-control-1.1:0=
+	>=dev-haskell/monad-control-1.0.1.0:0=
+	<dev-haskell/monad-control-1.0.2:0=
 	>=dev-haskell/network-2.3.0.13:0=
 	<dev-haskell/network-2.7:0=
 	>=dev-haskell/parallel-3.2.0.2:3=
@@ -104,7 +136,7 @@ DEPEND="
 	<dev-haskell/temporary-1.3:0=
 	>=dev-haskell/regex-pcre-0.94.2:0=
 	<dev-haskell/regex-pcre-0.95:0=
-	>=dev-haskell/transformers-base-0.4.1:0=
+	>=dev-haskell/transformers-base-0.4:0=
 	<dev-haskell/transformers-base-0.5:0=
 	>=dev-haskell/utf8-string-0.3.7:0=
 	>=dev-haskell/zlib-0.5.3.3:0=
@@ -112,10 +144,10 @@ DEPEND="
 
 	>=dev-haskell/psqueue-1.1:0=
 	<dev-haskell/psqueue-1.2:0=
-	>=dev-haskell/snap-core-0.8.1:0=
-	<dev-haskell/snap-core-0.10:0=
-	>=dev-haskell/snap-server-0.8.1:0=
-	<dev-haskell/snap-server-0.10:0=
+	>=dev-haskell/snap-core-1.0.1:0=
+	<dev-haskell/snap-core-1.1:0=
+	>=dev-haskell/snap-server-1.0.1:0=
+	<dev-haskell/snap-server-1.1:0=
 	>=dev-haskell/case-insensitive-0.4.0.1
 
 	dev-haskell/vector:0=
@@ -125,12 +157,7 @@ DEPEND="
 		app-emulation/qemu
 	)
 	lxc? ( app-emulation/lxc )
-	drbd? (
-		|| (
-			<sys-cluster/drbd-8.5
-			sys-cluster/drbd-utils
-		)
-	)
+	drbd? ( sys-cluster/drbd-utils )
 	rbd? ( sys-cluster/ceph )
 	ipv6? ( net-misc/ndisc6 )
 	${PYTHON_DEPS}"
@@ -138,7 +165,10 @@ RDEPEND="${DEPEND}
 	!app-emulation/ganeti-htools"
 DEPEND+="
 	sys-devel/m4
-	app-text/pandoc
+	extradeps? ( app-text/pandoc )
+	extradeps? ( dev-python/sphinx[${PYTHON_USEDEP}] )
+	extradeps? ( media-fonts/urw-fonts )
+	extradeps? ( media-gfx/graphviz )
 	>=dev-haskell/test-framework-0.6:0=
 	<dev-haskell/test-framework-0.9:0=
 	>=dev-haskell/test-framework-hunit-0.2.7:0=
@@ -177,21 +207,8 @@ PATCHES+=(
 	"${FILESDIR}/${PN}-2.15-noded-must-run-as-root.patch"
 	"${FILESDIR}/${PN}-2.15-kvmd-run-as-daemon-user.patch"
 	"${FILESDIR}/${PN}-2.15-dont-invert-return-values-for-man-warnings.patch"
-	"${FILESDIR}/x_${PN}-socat-openssl-method-fix.patch"
-	"${FILESDIR}/x_${PN}-socat-openssl-verify-disable.patch"
-	"${FILESDIR}/x_daemon-util-logrotate-fix.patch"
-	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
-	"${FILESDIR}/x_lxc.mount.auto_proc_sys_cgroup.patch"
-	"${FILESDIR}/x_ganeti-logrotate-use-initscript.patch"
-	"${FILESDIR}/x_fix-cron-restart-spam.patch"
-	"${FILESDIR}/x_increase-maxnics-to-16.patch"
-	"${FILESDIR}/x_ganeti-no-pause-sync.patch"
-	"${FILESDIR}/x_lvm--readonly.patch"
-	"${FILESDIR}/x_ganeti-lxc-start-blank-log-file.patch"
-	"${FILESDIR}/x_ganeti-lxc-start-do-not-use-debug-loglevel.patch"
-	"${FILESDIR}/x_drbdsetup_new-resource_--on-no-data-accessible=suspend-io.patch"
-	"${FILESDIR}/x_add-disk-size-to-list-default-fields.patch"
-	"${FILESDIR}/x_lxc-2.1-configuration-keys.patch"
+	"${FILESDIR}/${PN}-2.15-respect-HFLAGS.patch"
+	"${FILESDIR}/ganeti-2.15.2-bdev_py.patch"
 )
 
 S="${WORKDIR}/${MY_P}"
@@ -199,6 +216,15 @@ S="${WORKDIR}/${MY_P}"
 QA_WX_LOAD="
 	usr/lib*/${PN}/${SERIES}/usr/sbin/ganeti-*d
 	usr/lib*/${PN}/${SERIES}/usr/bin/htools
+"
+# haskell...
+QA_FLAGS_IGNORED="
+	/usr/lib64/ganeti/2.15/usr/sbin/ganeti-metad
+	/usr/lib64/ganeti/2.15/usr/sbin/ganeti-wconfd
+	/usr/lib64/ganeti/2.15/usr/sbin/ganeti-confd
+	/usr/lib64/ganeti/2.15/usr/sbin/ganeti-luxid
+	/usr/lib64/ganeti/2.15/usr/sbin/ganeti-kvmd
+	/usr/lib64/ganeti/2.15/usr/bin/htools
 "
 
 pkg_setup () {
@@ -250,6 +276,9 @@ src_prepare() {
 	# take the sledgehammer approach to bug #526270
 	grep -lr '/bin/sh' "${S}" | xargs -r -- sed -i 's:/bin/sh:/bin/bash:g'
 
+	sed "s:%LIBDIR%:$(get_libdir):g" "${FILESDIR}/ganeti.initd-r4" \
+		> "${T}/ganeti.initd"
+
 	eapply_user
 
 	[[ ${PV} =~ [9]{4,} ]] && ./autogen.sh
@@ -285,15 +314,21 @@ src_configure () {
 		$(use_enable monitoring) \
 		$(usex kvm '--with-kvm-path=' '' "/usr/bin/qemu-system-${kvm_arch}" '') \
 		$(usex haskell-daemons "--enable-confd=haskell" '' '' '') \
-		--with-haskell-flags="-optc -no-pie -optl -no-pie -optl -Wl,-z,relro -optl -Wl,--as-needed" \
+		--with-haskell-flags="-optl -Wl,-z,relro -optl -Wl,--as-needed" \
 		--enable-socat-escape \
 		--enable-socat-compress
+
+	# This is a very ugly hack to prevent make from failing when trying to build these files. The problem is that if we want to build these, then we have to install 102 more dependencies.
+	for f in {ganeti-cleaner,ganeti-confd,ganeti-luxid,ganeti-listrunner,ganeti-kvmd,ganeti-mond,ganeti-noded,ganeti-extstorage-interface,ganeti-rapi,ganeti-watcher,ganeti-wconfd,ganeti,gnt-backup,gnt-cluster,gnt-debug,gnt-group,gnt-network,gnt-instance,gnt-job,gnt-node,gnt-os,gnt-storage,gnt-filter,hail,harep,hbal,hcheck,hinfo,hscan,hspace,hsqueeze,hroller,htools,mon-collector}; do
+		touch man/$f.gen man/$f.html.in
+	done
+	touch man/ganeti-cleaner.8.in man/ganeti-confd.8.in man/ganeti-luxid.8.in man/ganeti-listrunner.8.in man/ganeti-kvmd.8.in man/ganeti-mond.8.in man/ganeti-noded.8.in man/ganeti-extstorage-interface.7.in man/ganeti-rapi.8.in man/ganeti-watcher.8.in man/ganeti-wconfd.8.in man/ganeti.7.in man/gnt-backup.8.in man/gnt-cluster.8.in man/gnt-debug.8.in man/gnt-group.8.in man/gnt-network.8.in man/gnt-instance.8.in man/gnt-job.8.in man/gnt-node.8.in man/gnt-os.8.in man/gnt-storage.8.in man/gnt-filter.8.in man/hail.1.in man/harep.1.in man/hbal.1.in man/hcheck.1.in man/hinfo.1.in man/hscan.1.in man/hspace.1.in man/hsqueeze.1.in man/hroller.1.in man/htools.1.in man/mon-collector.7.in
 }
 
 src_install () {
 	emake V=1 DESTDIR="${D}" install
 
-	newinitd "${FILESDIR}"/ganeti.initd-r3 ${PN}
+	newinitd "${T}"/ganeti.initd ${PN}
 	newconfd "${FILESDIR}"/ganeti.confd-r2 ${PN}
 
 	if use kvm; then
