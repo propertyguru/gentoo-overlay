@@ -12,42 +12,51 @@ MY_PV="${MY_PV/_beta/~beta}"
 MY_P="${PN}-${MY_PV}"
 SERIES="$(ver_cut 1-2)"
 
-DEBIAN_PATCH=11
+DEBIAN_PATCH=15
 SRC_URI="
 	http://downloads.ganeti.org/releases/${SERIES}/${MY_P}.tar.gz
 	mirror://debian/pool/main/g/ganeti-${SERIES}/ganeti-${SERIES}_${PV}-${DEBIAN_PATCH}.debian.tar.xz
 "
 KEYWORDS="amd64 ~x86"
 PATCHES=(
-	"${FILESDIR}"/ganeti-2.15-use-balloon-device.patch
-	"${WORKDIR}"/debian/patches/do-not-backup-export-dir.patch
-	"${WORKDIR}"/debian/patches/Makefile.am-use-C.UTF-8
-	"${WORKDIR}"/debian/patches/relax-deps
-	"${WORKDIR}"/debian/patches/zlib-0.6-compatibility
-	"${WORKDIR}"/debian/patches/fix_FTBFS_with_sphinx-1.3.5
-	"${WORKDIR}"/debian/patches/fix_ftbfs_with_sphinx_1.4
-	"${WORKDIR}"/debian/patches/use-proper-cabal-dev.patch
-	"${WORKDIR}"/debian/patches/0001-Drop-dependency-on-MonadCatchIO-transformers.patch
-	"${WORKDIR}"/debian/patches/0001-GHC-8-support.patch
-	"${WORKDIR}"/debian/patches/ghc8-fixes
-	"${WORKDIR}"/debian/patches/snap-server-1.0-compat
-	"${WORKDIR}"/debian/patches/non-DSA-SSH-key-support.patch
-	"${WORKDIR}"/debian/patches/fix-ssh-key-renewal-on-single-node-clusters.patch
-	"${WORKDIR}"/debian/patches/set-defaults-for-ssh-type-bits.patch
-	"${WORKDIR}"/debian/patches/use-hv-class-to-check-for-migration.patch
-	"${WORKDIR}"/debian/patches/do-not-specify-socat-ssl-method.patch
-	"${WORKDIR}"/debian/patches/fix-ftbfs-with-sphinx-1.5.patch
-	"${WORKDIR}"/debian/patches/fix-failover-from-dead-node.patch
-	"${WORKDIR}"/debian/patches/fix-cpu-affinity.patch
-	"${WORKDIR}"/debian/patches/fix-fcntl-i386.patch
-	"${WORKDIR}"/debian/patches/fix-ovf-test-path.patch
-	"${WORKDIR}"/debian/patches/fix-qa-ssconf-race.patch
-	"${WORKDIR}"/debian/patches/relax-sphinx-version-check.patch
-	#"${WORKDIR}"/debian/patches/THH-2.12.patch
-	"${WORKDIR}"/debian/patches/sphinx-1.7.patch
-	"${WORKDIR}"/debian/patches/ca-use-sha256-md.patch
-	"${WORKDIR}"/debian/patches/impexpd-fix-certificate-verification-with-new-socat.patch
-	"${WORKDIR}"/debian/patches/impexpd-fix-certificate-verification-with-new-socat-2.patch
+	"${WORKDIR}"/debian/patches/0001-do-not-backup-export-dir.patch
+	"${WORKDIR}"/debian/patches/0002-Makefile.am-use-C.UTF-8
+	"${WORKDIR}"/debian/patches/0003-relax-deps
+	"${WORKDIR}"/debian/patches/0004-ghc-7.10-compatibility.patch # Breaks the build on 7.8 but we don't care
+	"${WORKDIR}"/debian/patches/0005-zlib-0.6-compatibility
+	"${WORKDIR}"/debian/patches/0006-fix_FTBFS_with_sphinx-1.3.5
+	"${WORKDIR}"/debian/patches/0007-fix_ftbfs_with_sphinx_1.4
+	"${WORKDIR}"/debian/patches/0008-use-proper-cabal-dev.patch
+	"${WORKDIR}"/debian/patches/0009-Drop-dependency-on-MonadCatchIO-transformers.patch
+	"${WORKDIR}"/debian/patches/0010-GHC-8-support.patch
+	"${WORKDIR}"/debian/patches/0011-ghc8-fixes
+	"${WORKDIR}"/debian/patches/0012-snap-server-1.0-compat
+	"${WORKDIR}"/debian/patches/0013-non-DSA-SSH-key-support.patch
+	"${WORKDIR}"/debian/patches/0014-fix-ssh-key-renewal-on-single-node-clusters.patch
+	"${WORKDIR}"/debian/patches/0015-set-defaults-for-ssh-type-bits.patch
+	"${WORKDIR}"/debian/patches/0016-use-hv-class-to-check-for-migration.patch
+	"${WORKDIR}"/debian/patches/0017-do-not-specify-socat-ssl-method.patch
+	"${WORKDIR}"/debian/patches/0018-fix-ftbfs-with-sphinx-1.5.patch
+	"${WORKDIR}"/debian/patches/0019-fix-failover-from-dead-node.patch
+	"${WORKDIR}"/debian/patches/0020-fix-cpu-affinity.patch
+	"${WORKDIR}"/debian/patches/0021-fix-fcntl-i386.patch
+	"${WORKDIR}"/debian/patches/0022-fix-ovf-test-path.patch
+	"${WORKDIR}"/debian/patches/0023-fix-qa-ssconf-race.patch
+	"${WORKDIR}"/debian/patches/0024-relax-sphinx-version-check.patch
+	#"${WORKDIR}"/debian/patches/0025-THH-2.12.patch
+	"${WORKDIR}"/debian/patches/0026-sphinx-1.7.patch
+	"${WORKDIR}"/debian/patches/0027-ca-use-sha256-md.patch
+	"${WORKDIR}"/debian/patches/0028-impexpd-fix-certificate-verification-with-new-socat.patch
+	"${WORKDIR}"/debian/patches/0029-impexpd-fix-certificate-verification-with-new-socat-2.patch
+	"${WORKDIR}"/debian/patches/0030-Allow-newer-temporary-versions.patch
+	# gentoo has cabal 1.24.2.0, and it seems this will make the older version fail: "${WORKDIR}"/debian/patches/0031-Cabal-2.2-compatibility.patch
+	# This is for GHC 8.4/base-4.11, we have GHC 8.0.2: "${WORKDIR}"/debian/patches/0032-base-4.11-compatibility.patch
+	# This needs at least hinotify-0.3.10, gentoo has only 0.3.8.1: "${WORKDIR}"/debian/patches/0033-hinotify-0.3.10-changes.patch
+	# `man start-stop-daemon` on gentoo for `` says "Match the process name instead of a pidfile or executable." so it probably won't work: "${WORKDIR}"/debian/patches/0034-daemon-util-also-match-processes-by-name.patch
+	"${WORKDIR}"/debian/patches/0035-KVM-replace-localtime-with-rtc.patch
+	"${WORKDIR}"/debian/patches/0036-KVM-replace-balloon-with-device-virtio-balloon.patch
+	"${WORKDIR}"/debian/patches/0037-KVM-fix-VNC-TLS-handling-for-QEMU-3.1.patch
+	"${WORKDIR}"/debian/patches/0038-KVM-replace-unsupported-arguments-during-migration.patch
 	"${FILESDIR}/x_daemon-util-logrotate-fix.patch"
 	"${FILESDIR}/x_no-wait-for-sync_no-ip-check_no-name-check.patch"
 	"${FILESDIR}/x_lxc.mount.auto_proc_sys_cgroup.patch"
@@ -241,12 +250,6 @@ pkg_setup () {
 
 src_prepare() {
 	local testfile
-	if has_version '>=dev-lang/ghc-7.10'; then
-		# Breaks the build on 7.8
-		PATCHES+=(
-			"${WORKDIR}"/debian/patches/ghc-7.10-compatibility.patch
-		)
-	fi
 	if use experimental; then
 		ewarn "Experimental patches have been applied! RPC between daemons with different patches applied may cause breakage!"
 		PATCHES+=(
