@@ -12,7 +12,8 @@ stop() {
 	l="$(lxc-ls -1 --active)" # This includes `--frozen` TODO: determine when can an instance be in a frozen state under ganeti and if we should stop frozen instances or do something else
 	[ -n "$l" ] || return 0
 	ebegin "Stopping $(echo "$l" | wc -w) LXC instances $(echo "$l" | xargs)"
-	# We are using the default timeout of 60 seconds of lxc-stop below: https://github.com/lxc/lxc/blob/lxc-1.1.5/src/lxc/lxc_stop.c#L155-L162
-	echo "$l" | xargs -P 0 -n 1 lxc-stop -n
+	# If not using `--kill`, then that's using the default timeout of 60 seconds of lxc-stop below: https://github.com/lxc/lxc/blob/lxc-1.1.5/src/lxc/lxc_stop.c#L155-L162
+	# The problem is that a lot of instances are not configured to listen for the poweroff event from LXC, so they don't do anything when they receive a signal, and they get killed anyway, just everyone has to wait a minute for it. So just use `--kill`.
+	echo "$l" | xargs -P 0 -n 1 lxc-stop --kill -n
 	eend $?
 }
