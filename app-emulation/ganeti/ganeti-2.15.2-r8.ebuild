@@ -70,6 +70,7 @@ PATCHES=(
 	"${FILESDIR}/x_drbdsetup_new-resource_--on-no-data-accessible=suspend-io.patch"
 	"${FILESDIR}/x_add-disk-size-to-list-default-fields.patch"
 	"${FILESDIR}/x_lxc-2.1-configuration-keys.patch"
+	"${FILESDIR}/x_lxc-3.1-cgroup-path.patch"
 )
 
 DESCRIPTION="Ganeti is a virtual server management software tool"

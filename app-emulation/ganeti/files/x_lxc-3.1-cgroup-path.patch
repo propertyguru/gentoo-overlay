@@ -1,0 +1,13 @@
+diff --git a/lib/hypervisor/hv_lxc.py b/lib/hypervisor/hv_lxc.py
+index 514896f44..c0012ad7b 100644
+--- a/lib/hypervisor/hv_lxc.py
++++ b/lib/hypervisor/hv_lxc.py
+@@ -351,7 +351,7 @@ class LXCHypervisor(hv_base.BaseHypervisor):
+     subsys_dir = cls._GetOrPrepareCgroupSubsysMountPoint(subsystem)
+     base_group = cls._GetCurrentCgroupSubsysGroups().get(subsystem, "")
+ 
+-    return utils.PathJoin(subsys_dir, base_group, "lxc")
++    return utils.PathJoin(subsys_dir, base_group, "lxc.payload")
+ 
+   @classmethod
+   def _GetCgroupParamPath(cls, param_name, instance_name=None):
