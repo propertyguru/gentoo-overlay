@@ -1,5 +1,5 @@
 #!/sbin/openrc-run
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 CONTAINER=${SVCNAME#*.}
@@ -74,7 +74,7 @@ depend() {
 		case "${_x##*:}" in
 			# when the network type is set to phys, we can make use of a
 			# network service (for instance to set it up before we disable
-			# the net_admin capability), but we might also not set it up
+			# the net_admin capability), but we might also  not set it up
 			# at all on the host and leave the net_admin capable service
 			# to take care of it.
 			phys)	use net.${_if} ;;
@@ -98,27 +98,34 @@ start() {
 		EM_386)		setarch=linux32;;
 	esac
 
-	ebegin "Starting ${CONTAINER}"
-	env -i ${setarch} $(which lxc-start) -l WARN -n ${CONTAINER} -f ${CONFIGFILE} -d -o /var/log/lxc/${CONTAINER}.log
+	ebegin "Starting LXC container ${CONTAINER}"
+	env -i ${setarch} $(which lxc-start) -n ${CONTAINER} -f ${CONFIGFILE} -d -o /var/log/lxc/${CONTAINER}.log
 	sleep 1
 
 	# lxc-start -d will _always_ report a correct startup, even if it
 	# failed, so rather than trust that, check that the cgroup exists.
-	[ -d /sys/fs/cgroup/cpuset/lxc/${CONTAINER} ]
+	# fix for LXC 3.1	
+
+	STATE="$(lxc-info -s -H ${CONTAINER})"
+	[ "$STATE" = "RUNNING" ]
+	
 	eend $?
 }
 
 stop() {
 	checkconfig || return 1
 
-
-	if ! [ -d /sys/fs/cgroup/cpuset/lxc/${CONTAINER} ]; then
+	STATE="$(lxc-info -s -H ${CONTAINER})"
+	
+	if ! [ "$STATE" = "RUNNING" ]; then
 	    ewarn "${CONTAINER} doesn't seem to be started."
 	    return 0
 	fi
 
-	# 10s should be enough to shut everything down
-	ebegin "Stopping ${CONTAINER}"
-	lxc-stop -t 10 -n ${CONTAINER}
+	# 30s should be enough to shut everything down
+	# lxc-stop will return back anyway as soon as successful shutdown
+	# after 30s, lxc-stop sends SIGKILL (dirty shotdown)
+	ebegin "Stopping LXC container ${CONTAINER}"
+	lxc-stop -t 30 -n ${CONTAINER}
 	eend $?
 }
