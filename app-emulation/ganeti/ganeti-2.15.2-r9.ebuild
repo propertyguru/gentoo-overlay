@@ -72,6 +72,7 @@ PATCHES=(
 	"${FILESDIR}/x_add-disk-size-to-list-default-fields.patch"
 	"${FILESDIR}/x_lxc-2.1-configuration-keys.patch"
 	"${FILESDIR}/x_lxc-3.1-cgroup-path.patch"
+	"${FILESDIR}/x_OpenSSL.SSL.ConnectionType.patch"
 )
 
 DESCRIPTION="Ganeti is a virtual server management software tool"
