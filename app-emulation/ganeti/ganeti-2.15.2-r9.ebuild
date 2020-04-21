@@ -245,7 +245,7 @@ QA_FLAGS_IGNORED="
 	/usr/lib64/ganeti/2.15/usr/bin/htools
 "
 
-pkg_setup () {
+pkg_setup() {
 	local user
 	python-single-r1_pkg_setup
 
@@ -298,7 +298,7 @@ src_prepare() {
 	eautoreconf
 }
 
-src_configure () {
+src_configure() {
 	# this is kind of a hack to work around the removal of the qemu-kvm wrapper
 	local kvm_arch
 
@@ -337,7 +337,7 @@ src_configure () {
 	touch man/ganeti-cleaner.8.in man/ganeti-confd.8.in man/ganeti-luxid.8.in man/ganeti-listrunner.8.in man/ganeti-kvmd.8.in man/ganeti-mond.8.in man/ganeti-noded.8.in man/ganeti-extstorage-interface.7.in man/ganeti-rapi.8.in man/ganeti-watcher.8.in man/ganeti-wconfd.8.in man/ganeti.7.in man/gnt-backup.8.in man/gnt-cluster.8.in man/gnt-debug.8.in man/gnt-group.8.in man/gnt-network.8.in man/gnt-instance.8.in man/gnt-job.8.in man/gnt-node.8.in man/gnt-os.8.in man/gnt-storage.8.in man/gnt-filter.8.in man/hail.1.in man/harep.1.in man/hbal.1.in man/hcheck.1.in man/hinfo.1.in man/hscan.1.in man/hspace.1.in man/hsqueeze.1.in man/hroller.1.in man/htools.1.in man/mon-collector.7.in
 }
 
-src_install () {
+src_install() {
 	emake V=1 DESTDIR="${D}" install
 
 	newinitd "${T}"/ganeti.initd ${PN}
@@ -398,7 +398,7 @@ pkg_postinst() {
 	fi
 }
 
-src_test () {
+src_test() {
 	PATH="${S}/scripts:${S}/src:${PATH}" \
 		TMPDIR="/tmp" \
 		GANETI_MASTER="$(hostname -f)" \
