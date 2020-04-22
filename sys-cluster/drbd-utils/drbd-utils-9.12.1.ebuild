@@ -46,9 +46,6 @@ src_prepare() {
 
 	eapply -p0 "${FILESDIR}"/run-lock.patch
 
-	# bug 616758
-	eapply "${FILESDIR}"/drbd-utils-8.9.6-sysmacros.patch
-
 	default
 
 	autoreconf
