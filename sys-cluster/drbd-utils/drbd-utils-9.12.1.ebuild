@@ -44,10 +44,10 @@ src_prepare() {
 	sed -i -e '/usage-count/ s/yes/no/' scripts/global_common.conf || die
 	sed -i -e "s:\$(sysconfdir)/udev:$(get_udevdir):" scripts/Makefile.in || die
 
-	epatch "${FILESDIR}"/run-lock.patch
+	eapply -p0 "${FILESDIR}"/run-lock.patch
 
 	# bug 616758
-	epatch "${FILESDIR}"/drbd-utils-8.9.6-sysmacros.patch
+	eapply "${FILESDIR}"/drbd-utils-8.9.6-sysmacros.patch
 
 	autoreconf
 }
