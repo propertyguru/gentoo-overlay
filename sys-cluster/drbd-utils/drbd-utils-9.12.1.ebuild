@@ -71,7 +71,7 @@ src_compile() {
 src_install() {
 	# only install the tools
 	emake DESTDIR="${D}" install-tools install-doc
-	#dodoc README ChangeLog
+	dodoc README.md ChangeLog
 
 	# install our own init script
 	newinitd "${FILESDIR}"/${PN}-8.0.rc ${PN/-utils/}
