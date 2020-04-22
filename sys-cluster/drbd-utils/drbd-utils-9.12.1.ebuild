@@ -78,8 +78,6 @@ src_install() {
 	newinitd "${FILESDIR}"/${PN}-8.0.rc ${PN/-utils/}
 
 	dodoc scripts/drbd.conf.example
-
-	dosym ../usr/sbin/drbdadm /sbin/drbdadm
 }
 
 pkg_postinst() {
