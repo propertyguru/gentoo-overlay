@@ -102,7 +102,6 @@ DEPEND="
 		dev-python/pycurl[${PYTHON_MULTI_USEDEP}]
 		dev-python/ipaddr[${PYTHON_MULTI_USEDEP}]
 		dev-python/bitarray[${PYTHON_MULTI_USEDEP}]
-		dev-python/docutils[${PYTHON_MULTI_USEDEP}]
 		dev-python/fdsend[${PYTHON_MULTI_USEDEP}]
 	')
 		net-misc/iputils[arping]
@@ -181,10 +180,6 @@ RDEPEND="${DEPEND}
 DEPEND+="
 	sys-devel/m4
 	extradeps? (
-		app-text/pandoc
-		$(python_gen_cond_dep '
-			dev-python/sphinx[${PYTHON_MULTI_USEDEP}]
-		')
 		media-fonts/urw-fonts
 		media-gfx/graphviz
 	)
@@ -274,28 +269,30 @@ src_prepare() {
 	# 24618882737fd7c189adf99f4acc767d48f572c3
 	sed -i \
 		-e '/QuickCheck/s,< 2.8,< 2.8.3,g' \
-		cabal/ganeti.template.cabal
+		cabal/ganeti.template.cabal || die
 	# Neuter -Werror
 	sed -i \
 		-e '/^if DEVELOPER_MODE/,/^endif/s/-Werror//' \
-		Makefile.am
+		Makefile.am || die
 
 	# not sure why these tests are failing
 	# should remove this on next version bump if possible
 	for testfile in test/py/import-export_unittest.bash; do
-		printf '#!/bin/bash\ntrue\n' > "${testfile}"
+		printf '#!/bin/bash\ntrue\n' > "${testfile}" || die
 	done
 
 	# take the sledgehammer approach to bug #526270
-	grep -lr '/bin/sh' "${S}" | xargs -r -- sed -i 's:/bin/sh:/bin/bash:g'
+	grep -lr '/bin/sh' "${S}" | xargs -r -- sed -i 's:/bin/sh:/bin/bash:g' || die
 
 	sed "s:%LIBDIR%:$(get_libdir):g" "${FILESDIR}/ganeti.initd-r4" \
-		> "${T}/ganeti.initd"
+		> "${T}/ganeti.initd" || die
 
 	eapply_user
 
-	[[ ${PV} =~ [9]{4,} ]] && ./autogen.sh
-	rm autotools/missing
+	if [[ ${PV} =~ [9]{4,} ]]; then
+		./autogen.sh || die
+	fi
+	rm autotools/missing || die
 	eautoreconf
 }
 
@@ -329,13 +326,12 @@ src_configure() {
 		$(usex haskell-daemons "--enable-confd=haskell" '' '' '') \
 		--with-haskell-flags="-optl -Wl,-z,relro -optl -Wl,--as-needed" \
 		--enable-socat-escape \
-		--enable-socat-compress
+		--enable-socat-compress \
+		SPHINX= \
+		PANDOC=
 
-	# This is a very ugly hack to prevent make from failing when trying to build these files. The problem is that if we want to build these, then we have to install 102 more dependencies.
-	for f in {ganeti-cleaner,ganeti-confd,ganeti-luxid,ganeti-listrunner,ganeti-kvmd,ganeti-mond,ganeti-noded,ganeti-extstorage-interface,ganeti-rapi,ganeti-watcher,ganeti-wconfd,ganeti,gnt-backup,gnt-cluster,gnt-debug,gnt-group,gnt-network,gnt-instance,gnt-job,gnt-node,gnt-os,gnt-storage,gnt-filter,hail,harep,hbal,hcheck,hinfo,hscan,hspace,hsqueeze,hroller,htools,mon-collector}; do
-		touch man/$f.gen man/$f.html.in
-	done
-	touch man/ganeti-cleaner.8.in man/ganeti-confd.8.in man/ganeti-luxid.8.in man/ganeti-listrunner.8.in man/ganeti-kvmd.8.in man/ganeti-mond.8.in man/ganeti-noded.8.in man/ganeti-extstorage-interface.7.in man/ganeti-rapi.8.in man/ganeti-watcher.8.in man/ganeti-wconfd.8.in man/ganeti.7.in man/gnt-backup.8.in man/gnt-cluster.8.in man/gnt-debug.8.in man/gnt-group.8.in man/gnt-network.8.in man/gnt-instance.8.in man/gnt-job.8.in man/gnt-node.8.in man/gnt-os.8.in man/gnt-storage.8.in man/gnt-filter.8.in man/hail.1.in man/harep.1.in man/hbal.1.in man/hcheck.1.in man/hinfo.1.in man/hscan.1.in man/hspace.1.in man/hsqueeze.1.in man/hroller.1.in man/htools.1.in man/mon-collector.7.in
+	touch man/*.gen || die
+	touch man/*.in || die
 }
 
 src_install() {
@@ -350,9 +346,9 @@ src_install() {
 	fi
 
 	# ganeti installs it's own docs in a generic location
-	rm -rf "${D}"/{usr/share/doc/${PN},run}
+	rm -rf "${D}"/{usr/share/doc/${PN},run} || die
 
-	sed -i "s:/usr/$(get_libdir)/${PN}/tools/burnin:burnin:" doc/examples/bash_completion
+	sed -i "s:/usr/$(get_libdir)/${PN}/tools/burnin:burnin:" doc/examples/bash_completion || die
 	newbashcomp doc/examples/bash_completion gnt-instance
 	bashcomp_alias gnt-instance burnin ganeti-{cleaner,confd} \
 		h{space,check,scan,info,ail,arep,roller,squeeze,bal} \

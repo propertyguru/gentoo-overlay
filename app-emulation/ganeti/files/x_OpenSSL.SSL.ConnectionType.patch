@@ -15,6 +15,9 @@ Traceback (most recent call last):
 AttributeError: 'module' object has no attribute 'ConnectionType'
 ```
 
+This happens since dev-python/pyopenssl-19.1.0:
+> Removed deprecated ContextType, ConnectionType, PKeyType, X509NameType, X509ReqType, X509Type, X509StoreType, CRLType, PKCS7Type, PKCS12Type, and NetscapeSPKIType aliases. Use the classes without the Type suffix instead.
+https://www.pyopenssl.org/en/stable/changelog.html#id1
 --- ./lib/http/__init__.py.orig
 +++ ./lib/http/__init__.py
 @@ -377,7 +377,7 @@
