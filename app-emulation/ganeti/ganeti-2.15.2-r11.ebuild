@@ -73,7 +73,6 @@ PATCHES=(
 	"${FILESDIR}/x_add-disk-size-to-list-default-fields.patch"
 	"${FILESDIR}/x_lxc-2.1-configuration-keys.patch"
 	"${FILESDIR}/x_lxc-3.1-cgroup-path.patch"
-	"${FILESDIR}/x_OpenSSL.SSL.ConnectionType.patch"
 )
 
 DESCRIPTION="Ganeti is a virtual server management software tool"
@@ -224,6 +223,9 @@ PATCHES+=(
 	"${FILESDIR}/${PN}-2.15-dont-invert-return-values-for-man-warnings.patch"
 	"${FILESDIR}/${PN}-2.15-respect-HFLAGS.patch"
 	"${FILESDIR}/ganeti-2.15.2-bdev_py.patch"
+	"${FILESDIR}/ganeti-2.15.2-check-man-warnings.patch"
+	"${FILESDIR}/ganeti-2.15.2-ftbfs-sphinx-warning.patch"
+	"${FILESDIR}/ganeti-2.15.2-pyopenssl.patch"
 )
 
 S="${WORKDIR}/${MY_P}"
