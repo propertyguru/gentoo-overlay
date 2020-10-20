@@ -52,7 +52,7 @@ PATCHES=(
 	"${WORKDIR}"/debian/patches/0030-Allow-newer-temporary-versions.patch
 	# gentoo has cabal 1.24.2.0, and it seems this will make the older version fail: "${WORKDIR}"/debian/patches/0031-Cabal-2.2-compatibility.patch
 	# This is for GHC 8.4/base-4.11, we have GHC 8.0.2: "${WORKDIR}"/debian/patches/0032-base-4.11-compatibility.patch
-	# This needs at least hinotify-0.3.10, gentoo has only 0.3.8.1: "${WORKDIR}"/debian/patches/0033-hinotify-0.3.10-changes.patch
+	"${WORKDIR}"/debian/patches/0033-hinotify-0.3.10-changes.patch
 	# `man start-stop-daemon` on gentoo for `` says "Match the process name instead of a pidfile or executable." so it probably won't work: "${WORKDIR}"/debian/patches/0034-daemon-util-also-match-processes-by-name.patch
 	"${WORKDIR}"/debian/patches/0035-KVM-replace-localtime-with-rtc.patch
 	"${WORKDIR}"/debian/patches/0036-KVM-replace-balloon-with-device-virtio-balloon.patch
