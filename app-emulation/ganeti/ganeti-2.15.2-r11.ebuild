@@ -20,6 +20,7 @@ SRC_URI="
 KEYWORDS="amd64 ~x86"
 PATCHES=(
 	# This is already in 0036-KVM-replace-balloon-with-device-virtio-balloon.patch: "${FILESDIR}"/ganeti-2.15-use-balloon-device.patch
+	"${FILESDIR}"/ganeti-2.15-disable-docs.patch
 	"${WORKDIR}"/debian/patches/0001-do-not-backup-export-dir.patch
 	"${WORKDIR}"/debian/patches/0002-Makefile.am-use-C.UTF-8
 	"${WORKDIR}"/debian/patches/0003-relax-deps
